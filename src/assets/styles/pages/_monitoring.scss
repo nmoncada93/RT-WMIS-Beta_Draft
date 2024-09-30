@@ -24,27 +24,6 @@
   }
 }
 
-//----------------------------------------TESTING----------------------------------------------
-#imageContainer {
-  // TESTING
-  display: flex;
-  //display: grid;
-  //margin: 0 auto;
-  border: 3px solid red;
-  justify-content: center;
-  align-items: center;
-  //max-width: 100%;
-}
-
-#bcd3b7bcbb334d45a5e27a3ac2b96b49 {
-  //grid-column: 20% 1fr 20%;
-  border: 3px solid green;
-  width: 1100px;
-  //width: 0 auto;
-  height: 450px;
-  //style="width: 1100px; height: 450px"
-}
-
 .mapBox__titleH3,
 #monitoringSelector {
   cursor: pointer;
@@ -65,3 +44,5 @@
     border-color: $energicOrange;
   }
 }
+
+//----------------------------------------TESTING----------------------------------------------

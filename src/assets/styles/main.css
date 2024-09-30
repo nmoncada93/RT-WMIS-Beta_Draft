@@ -482,19 +482,6 @@ html {
   font-size: 1.75rem;
 }
 
-#imageContainer {
-  display: flex;
-  border: 3px solid red;
-  justify-content: center;
-  align-items: center;
-}
-
-#bcd3b7bcbb334d45a5e27a3ac2b96b49 {
-  border: 3px solid green;
-  width: 1100px;
-  height: 450px;
-}
-
 .mapBox__titleH3,
 #monitoringSelector {
   cursor: pointer;
@@ -514,4 +501,17 @@ html {
   background-color: #002366;
   color: #ffffff;
   border-color: #ff6600;
+}
+
+#imageContainer {
+  display: flex;
+  border: 3px solid blue;
+  justify-content: center;
+  align-items: center;
+}
+
+#bcd3b7bcbb334d45a5e27a3ac2b96b49 {
+  border: 3px solid green;
+  width: 1100px;
+  height: 450px;
 }/*# sourceMappingURL=main.css.map */
