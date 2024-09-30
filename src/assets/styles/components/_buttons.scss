@@ -1,0 +1,18 @@
+.primaryButton {
+  font: 900 2rem $fontFamilyText;
+  padding: 1.2rem 2rem;
+  text-align: center;
+  background-color: $energicOrange;
+  display: inline-block;
+  color: $pureWhite;
+  border-radius: 1.2rem;
+  border: 2px solid $energicOrange;
+
+  &:hover {
+    background-color: $pureWhite;
+    color: $energicOrange;
+  }
+}
+
+
+

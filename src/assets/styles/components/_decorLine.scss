@@ -1,0 +1,12 @@
+.bodyDecorLine {
+  margin: 0 auto;
+  width: 80%; /* Ajusta el ancho según tu diseño */
+  margin-bottom: 2%;
+  height: 2px; /* Grosor de la línea */
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}

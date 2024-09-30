@@ -1,27 +1,74 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" type="text/css" href="./assets/styles/main.scss"><!-- do not remove this line! -->
-    <title>UOC Boilerplate</title>
-  </head>
-  <body>
-    <div class="uoc-container">
-      <picture>
-        <source srcset="./assets/images/logo.png?as=webp&width=350" type="image/webp" />
-        <img src="./assets/images/logo.png?width=350" alt="Universitat Oberta de Catalunya" class="uoc-logo" />
-      </picture>
-      <h1 class="uoc-title">Hello, UOC!</h1>
-      <p>
-        This is a starter template for the Advanced HTML and CSS Tools courses
-        from the Master's Program in Multimedia Applications and the Master's
-        Program in Web App and Website Development at the Universitat Oberta de
-        Catalunya.
-      </p>
-    </div>
-    <include src="./views/footer.html"></include>
-    <script type="module" src="./assets/scripts/main.js"></script><!-- do not remove this line! -->
-  </body>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Real Time WorldWide Monitoring of Ionospheric Scillation"
+        />
+        <meta name="author" content="Nicolas Orlando Moncada Herrera" />
+        <!--meta property="og:image" content="img/og-image.png" /-->
+        <meta
+            property="og:title"
+            content="RT-WMIS (Real Time WorldWide Monitoring of Ionospheric Scillation)"
+        />
+        <!-- link rel="icon" href="img/favicon.png" type="image/x-icon" /-->
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="./assets/styles/main.scss"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Jockey+One&family=Krona+One&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+            rel="stylesheet"
+        />
+        <!-- do not remove this line! -->
+        <title>Real-Time WorldWide Monitoring of Ionospheric Scillation</title>
+    </head>
+
+    <body class="bodyContainer">
+        <include src="./views/header.html"></include>
+
+        <main class="mainContainer">
+            <h1 class="titleH1">
+                RT-WMIS: Real Time WorldWide Monitoring of Ionospheric
+                Scillation
+            </h1>
+
+            <div class="bodyDecorLine"></div>
+
+            <p class="normalText">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+                facilisis facilisis urna quis iaculis. Nunc eu mattis quam.
+                Nulla id enim sit amet sem euismod consequat. Vivamus semper
+                pulvinar consequat. Mauris a lobortis neque. Nulla eleifend non
+                risus eget hendrerit. Suspendisse porttitor volutpat
+                scelerisque. Nam venenatis libero velit, a venenatis ligula
+                maximus quis. Mauris molestie massa a fermentum commodo. Aliquam
+                hendrerit pharetra libero at convallis. Quisque finibus dapibus
+                metus aliquam efficitur. Suspendisse potenti. Phasellus
+                pellentesque orci eget molestie consequat. Nulla et eros at
+                lectus egestas lobortis. Pellentesque fringilla ornare sapien ut
+                rhoncus. Quisque vehicula orci ipsum, nec vulputate arcu euismod
+                a. Quisque venenatis lacinia facilisis. Nulla sit amet lectus et
+                tortor congue bibendum vel et dolor. Ut dapibus enim sed
+                pulvinar feugiat. Praesent iaculis fringilla ornare. Curabitur
+                aliquet metus tellus. Integer varius nibh neque, ac mollis ex
+                semper id. Donec et nibh consequat, sagittis leo id, aliquam
+                orci. Aliquam quis dolor eget felis consequat vulputate vel a
+                enim. Cras ut risus eu sem placerat porta. Proin pretium
+                hendrerit erat vitae iaculis. Praesent congue risus ante, et
+                mollis ante volutpat et.
+            </p>
+
+            <a class="primaryButton">Button</a>
+        </main>
+
+        <include src="./views/footer.html"></include>
+        <script src="./assets/scripts/main.js"></script>
+    </body>
 </html>
