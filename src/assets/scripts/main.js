@@ -61,6 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const iframeContainer = document.getElementById('iframeContainer');  // Contenedor del iframe
   const dynamicIframe = document.getElementById('dynamicIframe');  // El iframe dinámico para mostrar los gráficos
 
+      // Verificación adicional del iframeContainer
+      if (!iframeContainer) {
+        console.error("El elemento 'iframeContainer' no fue encontrado en el DOM");
+        return; // Termina la ejecución si el iframeContainer no existe
+      }
+
   if (monitoringSelector) {
       monitoringSelector.addEventListener('change', function() {
           const selectedValue = this.value;
