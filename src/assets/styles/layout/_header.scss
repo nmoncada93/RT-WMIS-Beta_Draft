@@ -31,22 +31,22 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     white-space: nowrap;
-    font-size: $fontSizeLogoTitle; // it allows auto scale the logo
-    font-weight: 500;
+    //font-size: $fontSizeLogoTitle; // it allows auto scale the logo
+    //font-weight: 500;
     text-align: left;
     transition: color 0.6s ease, transform 0.5s ease, text-shadow 0.8s ease; // Aquí definimos la transición en el estado base
   }
 
   &__a:hover {
     color: $energicOrange;
-    text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.8);
+    text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.7);
   }
 
   &__subtitle {
     grid-row: 2;
-    font-size: $fontSizeLogoSubtitle;
+    //font-size: $fontSizeLogoSubtitle;
     text-align: right;
-    font-weight: 400;
+    //font-weight: 400;
   }
 }
 

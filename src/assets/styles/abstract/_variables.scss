@@ -3,7 +3,6 @@ $energicOrange: #ff6600;
 $pureWhite: #ffffff;
 $spaceBlack: #000000;
 $spaceBlue: #002366;
-$gray: #cccccc;
 
 //Font Family
 $fontFamilyH1: "Krona One", sans-serif;
@@ -11,10 +10,12 @@ $fontFamilyH2: "Jockey One", sans-serif;
 $fontFamilyText: "Nunito", sans-serif;
 
 // Font sizes
-$fontSizeH1: 2.5rem; // Font size for H1 (~40px)
-$fontSizeH2: 2.3rem; // Font size for H2 (~32px)
-$fontSizeH3: 1.75rem; // Font size for H3 (~28px)
-$fontSizeText: 1.8rem; // Font size for main body text (~16px)
+$fontSizeH1: 3rem; // 2.5rem Font size for H1 (~40px)
+$fontSizeH2: 2.8rem; // 2.3rem Font size for H2 (~32px)
+//$fontSizeH3: 2.3rem; // 1.75rem Font size for H3 (~28px)
+$fontSizeH3: clamp(1rem, 1.2vw, 2.4rem);
+
+$fontSizeText: 2rem; // Font size for main body text (~16px)
 $fontSizeLogoTitle: clamp(
   1.3rem,
   3vw,

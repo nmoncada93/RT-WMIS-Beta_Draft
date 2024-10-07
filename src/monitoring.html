@@ -30,14 +30,17 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
+        <!-- Incluye el enlace de Font Awesome desde su CDN -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <!--This library works from a CDN in the WorldWide Network but is posible to have the Script local in my server-->
         <script
             type="text/javascript"
             src="https://assets.pyecharts.org/assets/v5/echarts.min.js"
         ></script>
+
         <!--ICONOS FONT AWESOME-->
         <!-- do not remove this line! -->
-        <title>Monitoring</title>
+        <title>RT-WMIS: Monitoring</title>
     </head>
 
     <body>
@@ -61,7 +64,6 @@
                         required
                         aria-required="true"
                         aria-describedby="clock-help"
-                        onchange="displayClockOutputsPlot()"
                     >
                         <option
                             class="selectOption selectOption--disabled"
@@ -71,214 +73,49 @@
                         >
                             Scroll down to select station
                         </option>
-                        <option value="ABMF">ABMF</option>
-                        <option value="ACOR">ACOR</option>
-                        <option value="ADH1">ADH1</option>
-                        <option value="AJAC">AJAC</option>
-                        <option value="ALBA">ALBA</option>
-                        <option value="ALGO">ALGO</option>
-                        <option value="ALIC">ALIC</option>
-                        <option value="ALME">ALME</option>
-                        <option value="AMCR">AMCR</option>
-                        <option value="ANDA">ANDA</option>
-                        <option value="ARD2">ARD2</option>
-                        <option value="AREG">AREG</option>
-                        <option value="ARUB">ARUB</option>
-                        <option value="ASCG">ASCG</option>
-                        <option value="BATF">BATF</option>
-                        <option value="BIK0">BIK0</option>
-                        <option value="BORJ">BORJ</option>
-                        <option value="BRAZ">BRAZ</option>
-                        <option value="BRMF">BRMF</option>
-                        <option value="BRST">BRST</option>
-                        <option value="BRUX">BRUX</option>
-                        <option value="BUCU">BUCU</option>
-                        <option value="BUTE">BUTE</option>
-                        <option value="CACE">CACE</option>
-                        <option value="CARG">CARG</option>
-                        <option value="CAS1">CAS1</option>
-                        <option value="CASC">CASC</option>
-                        <option value="CESB">CESB</option>
-                        <option value="CEU1">CEU1</option>
-                        <option value="CFRM">CFRM</option>
-                        <option value="CHOF">CHOF</option>
-                        <option value="CHTI">CHTI</option>
-                        <option value="CHUR">CHUR</option>
-                        <option value="CKIS">CKIS</option>
-                        <option value="CLIB">CLIB</option>
-                        <option value="COBA">COBA</option>
-                        <option value="COCO">COCO</option>
-                        <option value="CPAR">CPAR</option>
-                        <option value="CPVG">CPVG</option>
-                        <option value="CREU">CREU</option>
-                        <option value="CRUZ">CRUZ</option>
-                        <option value="CTAB">CTAB</option>
-                        <option value="CTWN">CTWN</option>
-                        <option value="CUT0">CUT0</option>
-                        <option value="CUUT">CUUT</option>
-                        <option value="CZTG">CZTG</option>
-                        <option value="DARW">DARW</option>
-                        <option value="DAV1">DAV1</option>
-                        <option value="DENT">DENT</option>
-                        <option value="DJIG">DJIG</option>
-                        <option value="DLF1">DLF1</option>
-                        <option value="DOUR">DOUR</option>
-                        <option value="DRAO">DRAO</option>
-                        <option value="DYNG">DYNG</option>
-                        <option value="EACH">EACH</option>
-                        <option value="EBRE">EBRE</option>
-                        <option value="EESC">EESC</option>
-                        <option value="EIJS">EIJS</option>
-                        <option value="FALK">FALK</option>
-                        <option value="FLRS">FLRS</option>
-                        <option value="GAIA">GAIA</option>
-                        <option value="GAMB">GAMB</option>
-                        <option value="GAMG">GAMG</option>
-                        <option value="GANP">GANP</option>
-                        <option value="GLPS">GLPS</option>
-                        <option value="GOJA">GOJA</option>
-                        <option value="GOP6">GOP6</option>
-                        <option value="GRAC">GRAC</option>
-                        <option value="GUAM">GUAM</option>
-                        <option value="HOFN">HOFN</option>
-                        <option value="HRAG">HRAG</option>
-                        <option value="IGEO">IGEO</option>
-                        <option value="IJMU">IJMU</option>
-                        <option value="ILHA">ILHA</option>
-                        <option value="IQAL">IQAL</option>
-                        <option value="ISTA">ISTA</option>
-                        <option value="IZAN">IZAN</option>
-                        <option value="JOG2">JOG2</option>
-                        <option value="KIR8">KIR8</option>
-                        <option value="KIRI">KIRI</option>
-                        <option value="KIRU">KIRU</option>
-                        <option value="KITG">KITG</option>
-                        <option value="KOS1">KOS1</option>
-                        <option value="KOUG">KOUG</option>
-                        <option value="KRA1">KRA1</option>
-                        <option value="KRAW">KRAW</option>
-                        <option value="KRGG">KRGG</option>
-                        <option value="KZN2">KZN2</option>
-                        <option value="LAMA">LAMA</option>
-                        <option value="LAMP">LAMP</option>
-                        <option value="LAUT">LAUT</option>
-                        <option value="LMMF">LMMF</option>
-                        <option value="LPAL">LPAL</option>
-                        <option value="M0SE">M0SE</option>
-                        <option value="MAC1">MAC1</option>
-                        <option value="MAL2">MAL2</option>
-                        <option value="MALL">MALL</option>
-                        <option value="MAO0">MAO0</option>
-                        <option value="MAR7">MAR7</option>
-                        <option value="MAS1">MAS1</option>
-                        <option value="MATG">MATG</option>
-                        <option value="MAYG">MAYG</option>
-                        <option value="MBAR">MBAR</option>
-                        <option value="MDO1">MDO1</option>
-                        <option value="MET3">MET3</option>
-                        <option value="METG">METG</option>
-                        <option value="METS">METS</option>
-                        <option value="MGLA">MGLA</option>
-                        <option value="MGMC">MGMC</option>
-                        <option value="MGRP">MGRP</option>
-                        <option value="MGUE">MGUE</option>
-                        <option value="MIK3">MIK3</option>
-                        <option value="MIZU">MIZU</option>
-                        <option value="MSSA">MSSA</option>
-                        <option value="MTLA">MTLA</option>
-                        <option value="NICO">NICO</option>
-                        <option value="NKLG">NKLG</option>
-                        <option value="NOT1">NOT1</option>
-                        <option value="NRC1">NRC1</option>
-                        <option value="NRMG">NRMG</option>
-                        <option value="NYA2">NYA2</option>
-                        <option value="OBE4">OBE4</option>
-                        <option value="OHI3">OHI3</option>
-                        <option value="OLK2">OLK2</option>
-                        <option value="ONS1">ONS1</option>
-                        <option value="ORID">ORID</option>
-                        <option value="ORIV">ORIV</option>
-                        <option value="OUS2">OUS2</option>
-                        <option value="PASA">PASA</option>
-                        <option value="PAT0">PAT0</option>
-                        <option value="PEAF">PEAF</option>
-                        <option value="PEPE">PEPE</option>
-                        <option value="PERC">PERC</option>
-                        <option value="PIMO">PIMO</option>
-                        <option value="POAL">POAL</option>
-                        <option value="POHN">POHN</option>
-                        <option value="POLI">POLI</option>
-                        <option value="PRDS">PRDS</option>
-                        <option value="PRMA">PRMA</option>
-                        <option value="PTGG">PTGG</option>
-                        <option value="REUN">REUN</option>
-                        <option value="REYK">REYK</option>
-                        <option value="RGDG">RGDG</option>
-                        <option value="RIGA">RIGA</option>
-                        <option value="RIO1">RIO1</option>
-                        <option value="RIO2">RIO2</option>
-                        <option value="RJCG">RJCG</option>
-                        <option value="RJNI">RJNI</option>
-                        <option value="ROJI">ROJI</option>
-                        <option value="RSPE">RSPE</option>
-                        <option value="SASK">SASK</option>
-                        <option value="SAVO">SAVO</option>
-                        <option value="SCTB">SCTB</option>
-                        <option value="SEYG">SEYG</option>
-                        <option value="SGOC">SGOC</option>
-                        <option value="SGPO">SGPO</option>
-                        <option value="SICO">SICO</option>
-                        <option value="SIN1">SIN1</option>
-                        <option value="SJSP">SJSP</option>
-                        <option value="SOFI">SOFI</option>
-                        <option value="SONS">SONS</option>
-                        <option value="SPFE">SPFE</option>
-                        <option value="SPS1">SPS1</option>
-                        <option value="SRJV">SRJV</option>
-                        <option value="SSIA">SSIA</option>
-                        <option value="STFU">STFU</option>
-                        <option value="STJO">STJO</option>
-                        <option value="SULP">SULP</option>
-                        <option value="SUR4">SUR4</option>
-                        <option value="TASH">TASH</option>
-                        <option value="TBOB">TBOB</option>
-                        <option value="TERS">TERS</option>
-                        <option value="THTG">THTG</option>
-                        <option value="TILC">TILC</option>
-                        <option value="TIT2">TIT2</option>
-                        <option value="TLSE">TLSE</option>
-                        <option value="TOIL">TOIL</option>
-                        <option value="TONG">TONG</option>
-                        <option value="TRDS">TRDS</option>
-                        <option value="TUO2">TUO2</option>
-                        <option value="UBA1">UBA1</option>
-                        <option value="UCAG">UCAG</option>
-                        <option value="ULAB">ULAB</option>
-                        <option value="UNSA">UNSA</option>
-                        <option value="URUM">URUM</option>
-                        <option value="UTQI">UTQI</option>
-                        <option value="VALA">VALA</option>
-                        <option value="VARS">VARS</option>
-                        <option value="VEN1">VEN1</option>
-                        <option value="VFCH">VFCH</option>
-                        <option value="VIR2">VIR2</option>
-                        <option value="VIS0">VIS0</option>
-                        <option value="VIS6">VIS6</option>
-                        <option value="VLIS">VLIS</option>
-                        <option value="WARE">WARE</option>
-                        <option value="WARN">WARN</option>
-                        <option value="WHIT">WHIT</option>
-                        <option value="WIND">WIND</option>
-                        <option value="WSRT">WSRT</option>
-                        <option value="WUH2">WUH2</option>
-                        <option value="YEBE">YEBE</option>
-                        <option value="YELL">YELL</option>
-                        <option value="ZARA">ZARA</option>
+                        </option>
+                        <option class="selectOption" value="MAC1_s4_time">
+                            MAC1 s4
+                        </option>
+                        <option class="selectOption" value="MAC1_sphi_time">
+                            MAC1 sphi
+                        </option>
+                        <option class="selectOption" value="MAC1_rotil1_time">
+                            MAC1 rotil 1
+                        </option>
+                        <option class="selectOption" value="YELL_s4_time">
+                            YELL s4
+                        </option>
+                        <option class="selectOption" value="YELL_sphi_time">
+                            YELL sphi
+                        </option>
+                        <option class="selectOption" value="YELL_rotil1_time">
+                            YELL rotil 1
+                        </option>
+                        <option class="selectOption" value="ACOR">ACOR</option>
+                        <option class="selectOption" value="ABMF">ABMF</option>
+                        <option class="selectOption" value="ACOR">ACOR</option>
+                        <option class="selectOption" value="ADH1">ADH1</option>
+                        <option class="selectOption" value="AJAC">AJAC</option>
+                        <option class="selectOption" value="ALBA">ALBA</option>
+                        <option class="selectOption" value="ALGO">ALGO</option>
+                        <option class="selectOption" value="ALIC">ALIC</option>
                     </select>
 
-                    <div id="imageContainer">
-                        <!-- El nuevo iframe dinámico -->
-                        <div id="iframeContainer"></div>
+                    <!-- El nuevo iframe dinámico -->
+                    <div id="iframeContainer" style="display: none">
+                        <iframe
+                            id="dynamicIframe"
+                            src="./assets/images/placeholder.png"
+                            style="
+                                display: block;
+                                padding-top: 30px;
+                                width: 1200px;
+                                height: 500px;
+                            "
+                            frameborder="0"
+                        >
+                        </iframe>
                     </div>
                 </div>
 
@@ -287,22 +124,33 @@
                     <p class="mapBox__p">
                         Please select a map from the dropdown to view the chart.
                     </p>
-                    <h3 class="mapBox__titleH3 mapBox__map1">
-                        Map 1 <i class="fa-solid fa-chevron-down"></i>
+
+                    <h3 class="mapBox__titleH3 mapBox__s4H3">
+                        S4 MAP<i class="fa-solid fa-chevron-down"></i>
                     </h3>
                     <img
-                        class="clock1"
-                        src="./assets/images/clock1.png"
+                        class="mapBox__s4Img mapBox__img"
+                        src="./assets/images/ionomap_rotil1_60000.png"
                         alt=""
                         style="display: none"
                     />
 
-                    <h3 class="mapBox__titleH3 mapBox__map2">
-                        Map 2 <i class="fa-solid fa-chevron-down"></i>
+                    <h3 class="mapBox__titleH3 mapBox__rotilH3">
+                        ROTIL MAP<i class="fa-solid fa-chevron-down"></i>
                     </h3>
                     <img
-                        class="clock2"
-                        src="./assets/images/clock2.png"
+                        class="mapBox__rotilImg mapBox__img"
+                        src="./assets/images/ionomap_rotil1_60600.png"
+                        alt=""
+                        style="display: none"
+                    />
+
+                    <h3 class="mapBox__titleH3 mapBox__sphiH3">
+                        SPHI MAP<i class="fa-solid fa-chevron-down"></i>
+                    </h3>
+                    <img
+                        class="mapBox__sphiImg mapBox__img"
+                        src="./assets/images/ionomap_rotil1_61800.png"
                         alt=""
                         style="display: none"
                     />
@@ -310,11 +158,30 @@
 
                 <div class="recordsBox">
                     <h2 class="titleH2">Past Records</h2>
+                        <input
+                            type="date"
+                            id="dateInput"
+                            class="recordsBox__date"
+                        />
+                    <img
+                        src="./assets/images/past_records_sep.png"
+                        alt="Septiembre"
+                        id="septiembreImage"
+                        class="recordsBox__img"
+                        style="display: none"
+                    />
+                    <img
+                        src="./assets/images/past_records_ago.png"
+                        alt="Agosto"
+                        id="agostoImage"
+                        class="recordsBox__img"
+                        style="display: none"
+                    />
                 </div>
             </div>
         </main>
 
         <include src="./views/footer.html"></include>
-        <script src="./assets/scripts/main.js"></script>
+        <script type="module" src="./assets/scripts/main.js"></script>
     </body>
 </html>

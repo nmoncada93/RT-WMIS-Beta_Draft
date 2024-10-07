@@ -14,7 +14,7 @@
   // GRID CONTROLS
   display: grid;
   grid-template-columns: 10% repeat(5, 1fr) 10%;
-  grid-template-rows: 1fr 25px 1fr;
+  grid-template-rows: 1fr 25px 190px;
 }
 
 .footerCol1,
@@ -77,9 +77,9 @@
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
-  white-space: nowrap; // Evita que el contenido se divida en líneas múltiples
+  white-space: nowrap;
   overflow: hidden; // Oculta el desbordamiento
-  line-height: 0.8; // Interlineado de 1.5 veces el tamaño de la fuente (24px)
+  line-height: 0.8;
   align-items: center;
 
   &__a {

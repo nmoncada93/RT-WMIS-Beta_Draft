@@ -1,5 +1,6 @@
 .primaryButton {
   font: 900 2rem $fontFamilyText;
+  cursor: pointer;
   padding: 1.2rem 2rem;
   text-align: center;
   background-color: $energicOrange;
@@ -13,6 +14,3 @@
     color: $energicOrange;
   }
 }
-
-
-

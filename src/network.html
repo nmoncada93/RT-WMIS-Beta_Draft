@@ -26,8 +26,21 @@
             href="https://fonts.googleapis.com/css2?family=Jockey+One&family=Krona+One&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
             rel="stylesheet"
         />
+        <!-- Incluye el enlace de Font Awesome desde su CDN -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
+        <script
+            type="text/javascript"
+            src="https://assets.pyecharts.org/assets/v5/echarts.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://assets.pyecharts.org/assets/v5/maps/world.js"
+        ></script>
         <!-- do not remove this line! -->
-        <title>Network</title>
+        <title>RT-WMIS: Network</title>
     </head>
 
     <body>
@@ -45,54 +58,465 @@
                 ser of 47 currently available stations (including 3 collocated
                 pairs) mostly located in regions prone to scillation activity.
             </p>
-            <p class="normalText">
-                Mauris in erat odio. Etiam scelerisque accumsan risus. Phasellus
-                arcu risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.Mauris in erat odio. Etiam scelerisque
-                accumsan risus. Phasellus arcu risus, vestibulum vel ante
-                congue, feugiat accumsan lectus. Vestibulum tempor quam id lacus
-                euismod, sed luctus lectus vestibulum. Mauris ante felis,
-                tristique sed laoreet tempor, tempus vel eros. Pellentesque
-                sollicitudin justo imperdiet rhoncus maximus. Phasellus augue
-                ipsum, blandit sit amet rutrum vitae, lacinia vel velit.Mauris
-                in erat odio. Etiam scelerisque accumsan risus. Phasellus arcu
-                risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.
-            </p>
 
-            <p class="normalText">
-                Mauris in erat odio. Etiam scelerisque accumsan risus. Phasellus
-                arcu risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.Mauris in erat odio. Etiam scelerisque
-                accumsan risus. Phasellus arcu risus, vestibulum vel ante
-                congue, feugiat accumsan lectus. Vestibulum tempor quam id lacus
-                euismod, sed luctus lectus vestibulum. Mauris ante felis,
-                tristique sed laoreet tempor, tempus vel eros. Pellentesque
-                sollicitudin justo imperdiet rhoncus maximus. Phasellus augue
-                ipsum, blandit sit amet rutrum vitae, lacinia vel velit.Mauris
-                in erat odio. Etiam scelerisque accumsan risus. Phasellus arcu
-                risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.
-            </p>
+            <div class="monitoringContainer">
+                <div class="mapBox">
+                    <h2 class="titleH2">Map of the Network</h2>
+                    <div class="mapbox_div">
+                        <iframe
+                            class="mapBox__iframe"
+                            src="./assets/images/mapNetwork.html"
+                            title="Network Chart"
+                        ></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="monitoringContainer">
+                <div class="mapBox">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Station ID</th>
+                                <th>Station Name</th>
+                                <th>Country</th>
+                                <th>Longitude</th>
+                                <th>Latitude</th>
+                                <th>Receiver Type</th>
+                                <th>Antenna - Radome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>ARUB</td>
+                                <td>AUS</td>
+                                <td>125.9243575440</td>
+                                <td>-31.6369833130</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAR25.R3 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>ASCG</td>
+                                <td>SHN</td>
+                                <td>-14.3326646750</td>
+                                <td>-7.8639513670</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>BRUX</td>
+                                <td>BEL</td>
+                                <td>4.3585669620</td>
+                                <td>50.6094465410</td>
+                                <td>SEPT POLARX5TR</td>
+                                <td>JAVRINGANT_DM - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>CAS1</td>
+                                <td>ATA</td>
+                                <td>110.5197065940</td>
+                                <td>-66.1413206070</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>CHUR</td>
+                                <td>CAN</td>
+                                <td>-94.0887328590</td>
+                                <td>58.5881580810</td>
+                                <td>SEPT POLARX5</td>
+                                <td>ASH701945E_M - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>CPVG</td>
+                                <td>CPV</td>
+                                <td>-22.9349313860</td>
+                                <td>16.6262560260</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>DARW</td>
+                                <td>AUS</td>
+                                <td>131.1327445950</td>
+                                <td>-12.7605413350</td>
+                                <td>SEPT POLARX5</td>
+                                <td>JAVRINGANT_DM - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>DJIG</td>
+                                <td>DJI</td>
+                                <td>42.8470670290</td>
+                                <td>11.4511810640</td>
+                                <td>SEPT POLARX5</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>DUMG</td>
+                                <td>ATA</td>
+                                <td>140.0021881420</td>
+                                <td>-66.5248913990</td>
+                                <td>LEICA GR50</td>
+                                <td>LEIAR25.R4 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>HOFN</td>
+                                <td>ISL</td>
+                                <td>-15.1979158240</td>
+                                <td>64.1164605300</td>
+                                <td>LEICA GR50</td>
+                                <td>LEIAR25.R4 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>IQAL</td>
+                                <td>CAN</td>
+                                <td>-68.5105018150</td>
+                                <td>63.6030186820</td>
+                                <td>SEPT POLARX5S</td>
+                                <td>TPSCR.G3 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>KIRU</td>
+                                <td>SWE</td>
+                                <td>20.9684535800</td>
+                                <td>67.7226819200</td>
+                                <td>SEPT POLARX5TR</td>
+                                <td>SEPCHOKE_B3E6 - SPKE</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>KOUG</td>
+                                <td>GUF</td>
+                                <td>-52.6397505530</td>
+                                <td>5.0645195250</td>
+                                <td>SEPT POLARX5TR</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>MAC1</td>
+                                <td>AUS</td>
+                                <td>158.9358291640</td>
+                                <td>-54.3173860620</td>
+                                <td>SEPT POLARX5</td>
+                                <td>JAVRINGANT_DM - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>MAL2</td>
+                                <td>KEN</td>
+                                <td>40.1941465600</td>
+                                <td>-2.9760323230</td>
+                                <td>SEPT POLARX5</td>
+                                <td>LEIAR25.R4 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>MAR7</td>
+                                <td>SWE</td>
+                                <td>17.2584499800</td>
+                                <td>60.4301628590</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>17</td>
+                                <td>MAS1</td>
+                                <td>ESP</td>
+                                <td>-15.6332730330</td>
+                                <td>27.6054162420</td>
+                                <td>SEPT POLARX5</td>
+                                <td>LEIAR25.R4 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>18</td>
+                                <td>MBAR</td>
+                                <td>UGA</td>
+                                <td>30.7378793800</td>
+                                <td>-0.5974414520</td>
+                                <td>JAVAD TRE_3 DELTA</td>
+                                <td>ASH701945B_M - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>19</td>
+                                <td>METG</td>
+                                <td>FIN</td>
+                                <td>24.3841779480</td>
+                                <td>60.0758613200</td>
+                                <td>SEPT POLARX5</td>
+                                <td>TRM59800.00 - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>20</td>
+                                <td>NKLG</td>
+                                <td>GAB</td>
+                                <td>9.6721281490</td>
+                                <td>0.3515401500</td>
+                                <td>SEPT POLARX5</td>
+                                <td>TRM59800.00 - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>21</td>
+                                <td>NYA2</td>
+                                <td>NOR</td>
+                                <td>11.8586400310</td>
+                                <td>78.8575908330</td>
+                                <td>SEPT POLARX5</td>
+                                <td>JAVRINGANT_G5T - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>22</td>
+                                <td>OHI3</td>
+                                <td>ATA</td>
+                                <td>-57.9013810660</td>
+                                <td>-63.1663853980</td>
+                                <td>LEICA GR50</td>
+                                <td>LEIAR25.R4 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>23</td>
+                                <td>ONS1</td>
+                                <td>SWE</td>
+                                <td>11.9245458560</td>
+                                <td>57.2203997150</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>24</td>
+                                <td>OUS2</td>
+                                <td>NZL</td>
+                                <td>170.5109258350</td>
+                                <td>-45.6771166160</td>
+                                <td>SEPT POLARX5</td>
+                                <td>SEPCHOKE_B3E6 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>PIMO</td>
+                                <td>PHL</td>
+                                <td>121.0777276080</td>
+                                <td>14.5419117360</td>
+                                <td>SEPT POLARX5</td>
+                                <td>ASH701945C_M - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>26</td>
+                                <td>PTGG</td>
+                                <td>PHL</td>
+                                <td>121.0412640560</td>
+                                <td>14.4421806120</td>
+                                <td>SEPT POLARX5</td>
+                                <td>TRM59800.00 - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>27</td>
+                                <td>REYK</td>
+                                <td>ISL</td>
+                                <td>-21.9554891810</td>
+                                <td>63.9874183190</td>
+                                <td>LEICA GR50</td>
+                                <td>LEIAR25.R4 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>28</td>
+                                <td>RGDG</td>
+                                <td>ARG</td>
+                                <td>-67.7515274420</td>
+                                <td>-53.6022075290</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>TRM59800.00 - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>29</td>
+                                <td>SCTB</td>
+                                <td>ATA</td>
+                                <td>166.7580247310</td>
+                                <td>-77.7695524380</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>TRM115000.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>30</td>
+                                <td>SIN1</td>
+                                <td>SGP</td>
+                                <td>103.6794405410</td>
+                                <td>1.3339935900</td>
+                                <td>TRIMBLE NETR9</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>31</td>
+                                <td>TBOB</td>
+                                <td>AUS</td>
+                                <td>142.0574259440</td>
+                                <td>-29.2856785130</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAT504GG - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>32</td>
+                                <td>UCAL</td>
+                                <td>CAN</td>
+                                <td>-114.1338517180</td>
+                                <td>50.8917691070</td>
+                                <td>TRIMBLE NETR9</td>
+                                <td>TRM57971.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>33</td>
+                                <td>UNSA</td>
+                                <td>ARG</td>
+                                <td>-65.4076431880</td>
+                                <td>-24.5815804340</td>
+                                <td>SEPT ASTERX4</td>
+                                <td>SEPCHOKE_B3E6 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>34</td>
+                                <td>VARS</td>
+                                <td>NOR</td>
+                                <td>31.0312023100</td>
+                                <td>70.2141122840</td>
+                                <td>TRIMBLE NETR9</td>
+                                <td>TRM59800.00 - SCIS</td>
+                            </tr>
+                            <tr>
+                                <td>35</td>
+                                <td>WHIT</td>
+                                <td>CAN</td>
+                                <td>-135.2221153970</td>
+                                <td>60.5861922690</td>
+                                <td>SEPT POLARX5</td>
+                                <td>AOAD/M_T - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>36</td>
+                                <td>YELL</td>
+                                <td>CAN</td>
+                                <td>-114.4807068610</td>
+                                <td>62.3228950140</td>
+                                <td>JAVAD TRE_3N DELTA</td>
+                                <td>AOAD/M_T - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>37</td>
+                                <td>AMCR</td>
+                                <td>BRA</td>
+                                <td>-63.1422042320</td>
+                                <td>-4.0585603370</td>
+                                <td>TRIMBLE NETR8</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>38</td>
+                                <td>RNNA</td>
+                                <td>BRA</td>
+                                <td>-35.2077087350</td>
+                                <td>-5.7973360660</td>
+                                <td>SEPT POLARX5S</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>39</td>
+                                <td>ANDA</td>
+                                <td>AUS</td>
+                                <td>137.1601051350</td>
+                                <td>-30.2854142540</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>40</td>
+                                <td>UTQI</td>
+                                <td>USA</td>
+                                <td>-156.6150177710</td>
+                                <td>71.2056899590</td>
+                                <td>JAVAD TR_G3TH</td>
+                                <td>JAV_GRANT-G3T - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>41</td>
+                                <td>TILC</td>
+                                <td>ARG</td>
+                                <td>-65.3950716310</td>
+                                <td>-23.4364341260</td>
+                                <td>TRIMBLE NETR9</td>
+                                <td>TRM57971.00 - TZGD</td>
+                            </tr>
+                            <tr>
+                                <td>42</td>
+                                <td>DAV1</td>
+                                <td>ATA</td>
+                                <td>77.9726120810</td>
+                                <td>-68.4461494690</td>
+                                <td>SEPT POLARX5</td>
+                                <td>LEIAR25.R3 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>43</td>
+                                <td>GLPS</td>
+                                <td>ECU</td>
+                                <td>-90.3036648840</td>
+                                <td>-0.7380245070</td>
+                                <td>SEPT POLARX5</td>
+                                <td>ASH701945B_M - SCIT</td>
+                            </tr>
+                            <tr>
+                                <td>44</td>
+                                <td>KRGG</td>
+                                <td>ATF</td>
+                                <td>70.2555063140</td>
+                                <td>-49.1612413560</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>LEIAR25.R4 - LEIT</td>
+                            </tr>
+                            <tr>
+                                <td>45</td>
+                                <td>MAYG</td>
+                                <td>MYT</td>
+                                <td>45.2581557050</td>
+                                <td>-12.6992679020</td>
+                                <td>TRIMBLE ALLOY</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>46</td>
+                                <td>RIO2</td>
+                                <td>ARG</td>
+                                <td>-67.7511173110</td>
+                                <td>-53.6018393960</td>
+                                <td>SEPT ASTERX4</td>
+                                <td>SEPCHOKE_B3E6 - NONE</td>
+                            </tr>
+                            <tr>
+                                <td>47</td>
+                                <td>SEYG</td>
+                                <td>SYC</td>
+                                <td>55.5306325560</td>
+                                <td>-4.6475471080</td>
+                                <td>SEPT POLARX5</td>
+                                <td>TRM59800.00 - NONE</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
 
         <include src="./views/footer.html"></include>
-        <script src="./assets/scripts/main.js"></script>
+        <script type="module" src="./assets/scripts/main.js"></script>
     </body>
 </html>
