@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return; // Termina la ejecución si el iframeContainer no existe
       }
 
+
   if (monitoringSelector) {
       monitoringSelector.addEventListener('change', function() {
           const selectedValue = this.value;
