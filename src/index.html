@@ -35,45 +35,72 @@
         <title>RT-WMIS Project</title>
     </head>
 
-    <body class="bodyContainer">
+    <body class="bodyContainer bodyLanding">
+        <script type="module" src="./assets/scripts/main.js"></script>
         <include src="./views/header.html"></include>
 
-        <main class="mainContainer">
-            <h1 class="titleH1">
+        <main class="mainContainer landingContainer">
+            <h1 class="titleH1 titleH1--landing">
                 RT-WMIS: Real Time WorldWide Monitoring of Ionospheric
-                Scillation
+                Scintillation
             </h1>
 
-            <div class="bodyDecorLine"></div>
+            <div class="bodyDecorLine bodyDecorLine--landing"></div>
 
-            <p class="normalText">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-                facilisis facilisis urna quis iaculis. Nunc eu mattis quam.
-                Nulla id enim sit amet sem euismod consequat. Vivamus semper
-                pulvinar consequat. Mauris a lobortis neque. Nulla eleifend non
-                risus eget hendrerit. Suspendisse porttitor volutpat
-                scelerisque. Nam venenatis libero velit, a venenatis ligula
-                maximus quis. Mauris molestie massa a fermentum commodo. Aliquam
-                hendrerit pharetra libero at convallis. Quisque finibus dapibus
-                metus aliquam efficitur. Suspendisse potenti. Phasellus
-                pellentesque orci eget molestie consequat. Nulla et eros at
-                lectus egestas lobortis. Pellentesque fringilla ornare sapien ut
-                rhoncus. Quisque vehicula orci ipsum, nec vulputate arcu euismod
-                a. Quisque venenatis lacinia facilisis. Nulla sit amet lectus et
-                tortor congue bibendum vel et dolor. Ut dapibus enim sed
-                pulvinar feugiat. Praesent iaculis fringilla ornare. Curabitur
-                aliquet metus tellus. Integer varius nibh neque, ac mollis ex
-                semper id. Donec et nibh consequat, sagittis leo id, aliquam
-                orci. Aliquam quis dolor eget felis consequat vulputate vel a
-                enim. Cras ut risus eu sem placerat porta. Proin pretium
-                hendrerit erat vitae iaculis. Praesent congue risus ante, et
-                mollis ante volutpat et.
-            </p>
-
-            <a class="primaryButton">Button</a>
+            <div class="landingBoxes">
+                <div class="landingBox">
+                    <a href="./network.html" class="landingBox__a">
+                        <img src="./assets/images/network.png" alt="" />
+                        <h2 class="landingBox__title">NETWORK</h2>
+                        <p class="landingBox__description">
+                            Visualize the distribution of the global real-time
+                            network used in our study.
+                        </p>
+                    </a>
+                </div>
+                <div class="landingBox">
+                    <a href="./methodology.html">
+                        <img src="./assets/images/methodology.png" alt="" />
+                        <h2 class="landingBox__title">METHODOLOGY</h2>
+                        <p class="landingBox__description">
+                            Learn about the scintillation problem and our
+                            geodetic detrending methodology.
+                        </p>
+                    </a>
+                </div>
+                <div class="landingBox">
+                    <a href="./monitoring.html">
+                        <img src="./assets/images/monitoring.png" alt="" />
+                        <h2 class="landingBox__title">MONITORING</h2>
+                        <p class="landingBox__description">
+                            Access real-time monitoring results and browse our
+                            historical gallery of significant events.
+                        </p>
+                    </a>
+                </div>
+                <div class="landingBox">
+                    <a href="./data_products.html">
+                        <img src="./assets/images/dataProduct.png" alt="" />
+                        <h2 class="landingBox__title">DATA PRODUCTS</h2>
+                        <p class="landingBox__description">
+                            Directly access our data products via secure HTTPS
+                            links.
+                        </p>
+                    </a>
+                </div>
+                <div class="landingBox">
+                    <a href="./publications.html">
+                        <img src="./assets/images/publication.png" alt="" />
+                        <h2 class="landingBox__title">PUBLICATIONS</h2>
+                        <p class="landingBox__description">
+                            Explore relevant publications that utilize our
+                            products.
+                        </p>
+                    </a>
+                </div>
+            </div>
         </main>
 
         <include src="./views/footer.html"></include>
-        <script type="module" src="./assets/scripts/main.js"></script>
     </body>
 </html>

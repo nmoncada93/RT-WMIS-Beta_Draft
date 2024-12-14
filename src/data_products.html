@@ -37,43 +37,108 @@
 
     <body>
         <include src="./views/header.html"></include>
+        <div class="menuOverlay"></div>
 
         <main class="mainContainer">
-            <h1 class="titleH1">Data Products</h1>
+            <h1 class="titleH1">RT-WMIS Data Access and Policy</h1>
 
             <div class="bodyDecorLine"></div>
 
-            <h2 class="titleH2">Data Access</h2>
-            <p class="normalText">
-                Mauris in erat odio. Etiam scelerisque accumsan risus. Phasellus
-                arcu risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.
-            </p>
+            <div class="generalContainer">
+            <p class="normalText">Access important RT-WMIS data, understand usage policies, and explore available data formats and products.</p>
 
-            <h2 class="titleH2">Data Policy</h2>
+        
+              <section class="dataAccess">
+                <h2 class="dataAccess__title titleH2">DATA ACCESS</h2>
+                <div class="normalText dataAccessBox mb-0"><span>Access the RT-WMIS data directly:</span><a href="https://server.gage.upc.edu/rtwmis/" target="_blank" class="dataLink">Access RT-WMIS Data</a></div>
+                <p class="normalText mb-0 dataAccess__info">No username or password is required.</p>
+              </section>
+
+              <section class="dataPolicy boxContainer">
+                <h2 class="dataPolicy__title titleH2">DATA POLICY</h2>
+                <ul class="dataPolicy__ul normalText mb-0">
+                  <li class="dataPolicy__li">RT-WMIS data is available free of charge exclusively for informational, research, and educational purposes.</li>
+                  <li class="dataPolicy__li">Users intending to include RT-WMIS data in their publications are requested to notify <a href="mailto:info.gage@upc.edu" class="dataLink">gAGE/UPC</a>.</li>
+                  <li class="dataPolicy__li">Commercial use of RT-WMIS data requires prior consultation with gAGE/UPC to establish licensing arrangements.</li>
+                  <li class="dataPolicy__li">Redistribution of RT-WMIS data without written consent is strictly prohibited.</li>
+                  <li class="dataPolicy__li">RT-WMIS data may contain errors, and gAGE/UPC disclaims liability for any damages arising from its use.</li>
+                </ul>
+              </section>
+           
+
+          <section class="dataFormats boxContainer">
+            <h2 class="dataFormats__title titleH2">FORMATS OF PRODUCTS</h2>
+            <p class="normalText">The main scintillation monitoring indices are:</p>
+            <ul class="dataFormats__ul normalText">
+              <li class="dataFormats__li"><span class="bold">ROTI L1:</span> ROTI for the L1 signal, measured in TECU/min.</li>
+              <li class="dataFormats__li"><span class="bold">ROTI GF:</span> ROTI for the Geometry-free combination, measured in TECU/min.</li>
+              <li class="dataFormats__li"><span class="bold">S4 L1:</span> Amplitude scintillation index for the L1 signal.</li>
+              <li class="dataFormats__li"><span class="bold">σφ L1:</span> Phase scintillation index for the L1 signal, measured in radians.</li>
+              <li class="dataFormats__li"><span class="bold">σIF:</span> Phase scintillation index for the Ionosphere-free combination, measured in meters.</li>
+            </ul>
+            <p class="normalText">Additional data fields and indices include:</p>
             <p class="normalText">
-                Mauris in erat odio. Etiam scelerisque accumsan risus. Phasellus
-                arcu risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.
+              - Ndat values indicate the number of measurements used to calculate each index.<br>
+              - S4 and ROTI calculations include second-frequency measurements (L2 from GPS, L5 from Galileo).<br>
+              - Column 10 in <code>sphi.tmp</code> denotes the number of prefit measurements used by the Butterworth HPF.
             </p>
-            <h2 class="titleH2">Formats of Products</h2>
-            <p class="normalText">
-                Mauris in erat odio. Etiam scelerisque accumsan risus. Phasellus
-                arcu risus, vestibulum vel ante congue, feugiat accumsan lectus.
-                Vestibulum tempor quam id lacus euismod, sed luctus lectus
-                vestibulum. Mauris ante felis, tristique sed laoreet tempor,
-                tempus vel eros. Pellentesque sollicitudin justo imperdiet
-                rhoncus maximus. Phasellus augue ipsum, blandit sit amet rutrum
-                vitae, lacinia vel velit.
-            </p>
+            <div class="tablesContainer">
+              <div class="rotiTable">
+                <h3 class="dataFormats__subtitle titleH3">Data Format - roti.tmp</h3>
+                <table class="dataFormats__table ">
+                  <thead>
+                    <tr>
+                      <th>Column No.</th>
+                      <th>Field Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>Seconds of day</td></tr>
+                    <tr><td>2</td><td>Station name</td></tr>
+                    <tr><td>3</td><td>Satellite</td></tr>
+                    <tr><td>4</td><td>Elevation</td></tr>
+                    <tr><td>5</td><td>Azimuth</td></tr>
+                    <tr><td>6</td><td>ROTI L1</td></tr>
+                    <tr><td>7</td><td>ROTI GF</td></tr>
+                    <tr><td>8</td><td>Ndat (roti L1)</td></tr>
+                    <tr><td>9</td><td>Ndat (roti GF)</td></tr>
+                    <tr><td>10</td><td>S4 L1</td></tr>
+                    <tr><td>11</td><td>S4 L2 or L5</td></tr>
+                    <tr><td>12</td><td>ROTI L2 or L5</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="sphiTable">
+                <h3 class="dataFormats__subtitle titleH3">Data Format - sphi.tmp</h3>
+                <table class="dataFormats__table">
+                  <thead>
+                    <tr>
+                      <th>Column No.</th>
+                      <th>Field Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>Seconds of day</td></tr>
+                    <tr><td>2</td><td>Station name</td></tr>
+                    <tr><td>3</td><td>Satellite</td></tr>
+                    <tr><td>4</td><td>Elevation</td></tr>
+                    <tr><td>5</td><td>Azimuth</td></tr>
+                    <tr><td>6</td><td>σφ L1</td></tr>
+                    <tr><td>7</td><td>σIF</td></tr>
+                    <tr><td>8</td><td>Ndat (σφ L1)</td></tr>
+                    <tr><td>9</td><td>Ndat (σIF)</td></tr>
+                    <tr><td>10</td><td>Ndat (BTW HPF)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+          </section>
+
+        </div>
+            
         </main>
 
         <include src="./views/footer.html"></include>

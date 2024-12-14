@@ -1,0 +1,73 @@
+main {
+  margin-top: 14rem;
+  font-family: $fontFamilyText;
+  font-size: 1.4rem;
+}
+
+@media (max-width: 768px) {
+  main {
+    margin-top: 10rem;
+  }
+}
+
+.generalContainer {
+  margin: 0 10%;
+}
+
+.boxContainer {
+  background-color: $pureWhite;
+  border: 2px;
+  padding: 2%;
+  border-radius: 10px;
+  margin-bottom: 2%;
+ 
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  &__img {
+    margin: auto;
+  }
+  &__p {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: $fontSizeH3;
+  }
+}
+
+.selectorsContainer,
+.btnsContainer {
+  //border: solid 2px blue;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectorsContainer {
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .selectorsContainer {
+    flex-direction: column;
+  }
+}
+
+.landingContainer {
+  margin: 14rem 10%;
+}
+
+@media screen and (max-width: 768px) {
+  .landingContainer {
+    margin: 8rem 10%;
+  }
+}
+
+
+.yearSection {
+  margin-bottom: 20px;
+}
+
+.publication {
+  margin: 10px 0;
+  width: 100%;
+}

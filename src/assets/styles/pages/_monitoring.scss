@@ -1,79 +1,78 @@
-.monitoringContainer {
-  display: grid;
-  grid-template-columns: 10% 1fr 10%;
-}
-
-.indexBox,
-.mapBox,
-.recordsBox {
-  border: 2px;
-  padding: 2%;
-  border-radius: 10px;
-  margin-bottom: 2%;
-  padding-bottom: 6%;
-  grid-column: 2/3;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-  font-family: $fontFamilyText;
-}
-
-.mapBox {
-  &__p {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: $fontSizeH3;
-  }
-
-  &__img {
+.boxContainer {
+  &__titleH3 {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: auto;
+    padding: 0.5rem;
+    border: 2px solid $spaceBlue;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    font-size: clamp(1rem, 1.2vw, 2.4rem);
+    width: 100%;
+
+    &:hover,
+    &:focus {
+      background-color: $spaceBlue;
+      color: $pureWhite;
+      //border-color: $energicOrange;
+      border: 2px solid $energicOrange;
+    }
+
+    &--index {
+      margin: 0;
+    }
   }
 }
 
-.recordsBox {
-  display: flex;
-  flex-direction: column; /* Coloca los elementos verticalmente */
-  justify-content: center; /* Centra verticalmente */
-  align-items: center; /* Centra horizontalmente */
-  &__img {
-    margin: auto;
-    //display: none; // Oculta las imagenes por defecto
-  }
-}
-
-#iframeContainer {
-  display: flex;
-}
-
-#dynamicIframe {
-  display: block;
-  margin: auto;
-}
-
-.mapBox__titleH3,
-#monitoringSelector {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: auto;
-  padding: 0.5rem;
-  border: 2px solid $spaceBlue;
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  font-size: $fontSizeH3;
+.chartContainer {
   width: 100%;
+  height: 40vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
 
-  &:hover,
-  &:focus {
-    background-color: $spaceBlue;
-    color: $pureWhite;
-    //border-color: $energicOrange;
-    border: 2px solid $energicOrange;
-  }
+.chartIndex {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  margin: auto;
+}
+
+.pastChartContainer {
+  //width: 100%;
+  //height: 40vh;
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
+#pastChart {
+  width: 600px;
+  height: 400px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+}
+
+.pastChartIndex {
+  //width: 100%;
+  //height: 100%;
+  //max-width: 100%;
+  margin: auto;
+}
+
+.recordsBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /********************************************************
 *                                                       *
-*                ESTILOS DEL CALENDARIO                 *
+*                 ESTILOS DEL CALENDARIO                 *
 *                                                       *
 ********************************************************/
 .recordsBox__date {
@@ -82,32 +81,29 @@
   width: 0 auto;
   padding: 0.5rem;
   border: 2px solid $spaceBlue;
-  margin-bottom: 1rem;
+  //margin-bottom: 1rem;
   border-radius: 12px;
   background-color: $pureWhite;
   color: $spaceBlack;
   font-size: $fontSizeH3;
 
-  /* Estilos del texto y apariencia del calendario */
+  //apariencia del calendario
   &::-webkit-calendar-picker-indicator {
-    filter: invert(0.7) sepia(1) saturate(10) hue-rotate(180deg); /* Cambia el icono del calendario */
+    filter: invert(0.7) sepia(1) saturate(10) hue-rotate(180deg); //icono del calendario
     cursor: pointer;
   }
 
-  /* Cambiar el color del icono de calendario en Firefox */
   &::-moz-calendar-picker-indicator {
     color: $spaceBlue;
     cursor: pointer;
   }
 
-  /* Cambios en el hover */
   &:hover {
     border-color: $energicOrange;
     background-color: $spaceBlue;
     color: $pureWhite;
   }
 
-  /* Cambios en el focus */
   &:focus {
     outline: none;
     border-color: $energicOrange;

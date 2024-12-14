@@ -14,3 +14,78 @@
     color: $energicOrange;
   }
 }
+
+.callToAction {
+  //display: none;
+  margin: 0 auto;
+  margin-top: 0.1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 2px solid $energicOrange;
+  border-radius: 12px;
+  padding: 5px 20px;
+  width: 250px;
+  color: $spaceBlue;
+  font-size: clamp(1rem, 1.2vw, 2.4rem);
+  cursor: pointer;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &.active-button {
+    background-color: $energicOrange;
+    color: $pureWhite;
+  }
+}
+
+//.indexBtn {
+//margin-bottom: 1rem;
+//display: none;
+//}
+
+.selectBtn {
+  //margin-top: 1rem;
+  border: 2px solid $spaceBlue;
+  border-radius: 12px;
+  padding: 5px 20px;
+  min-width: 150px;
+  color: $spaceBlue;
+  font-size: clamp(1rem, 1.2vw, 2.4rem);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &.active-button {
+    background-color: $spaceBlue;
+    color: $pureWhite;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .selectBtn {
+    min-width: auto;
+  }
+}
+
+.indexButtonDispalyed {
+  margin-top: 1rem;
+  //margin-bottom: 1rem;
+  //display: none;
+  border: 2px solid $spaceBlue;
+  border-radius: 12px;
+  padding: 5px 20px;
+  width: 250px;
+  color: $spaceBlue;
+  font-size: clamp(1rem, 1.2vw, 2.4rem);
+  cursor: pointer;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &.active-button {
+    background-color: $spaceBlue;
+    color: $pureWhite;
+  }
+}
