@@ -1,6 +1,12 @@
-backend/venv/
-backend/__pycache__/
-backend/ReadmeAWS.md
+# backend/venv/
+# backend/__pycache__/
+# backend/ReadmeAWS.md
+
+/backend
+
+requirements.txt
+
+
 
 # Ignorar todo el contenido de backend/upc_tmp
 /backend/upc_tmp/*
