@@ -1,3 +1,13 @@
+backend/venv/
+backend/__pycache__/
+
+# Ignorar todo el contenido de backend/upc_tmp
+/backend/upc_tmp/*
+
+# ¡Excepto los archivos específicos!
+!/backend/upc_tmp/igp_sphi.dat
+!/backend/upc_tmp/sphi.tmp
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/git,sass,node,macos,linux,windows,vscode,sublimetext
 # Edit at https://www.toptal.com/developers/gitignore?templates=git,sass,node,macos,linux,windows,vscode,sublimetext

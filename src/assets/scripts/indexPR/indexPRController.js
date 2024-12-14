@@ -12,7 +12,8 @@ let selectedStation = ""; // Variable para almacenar la estación seleccionada
 
 // [B] Función para obtener los datos de sphi.tmp desde el backend -------------
 function fetchSphiData(year, doy) {
-  const url = `http://127.0.0.1:5000/api/read-sphi/${year}/${doy}`;
+  const url = `http://127.0.0.1:5000/indexPR/api/read-sphi/${year}/${doy}`;
+
   //console.log("Solicitando datos de sphi.tmp a:", url);
 
   return fetch(url)

@@ -8,7 +8,7 @@ async function fetchRawSphiData(file) {
 
   isFetching.sphi = true; // Activa el flag
   try {
-    const response = await fetch(`http://127.0.0.1:5000/rtMap/get-json?file=${file}`);
+    const response = await fetch(`http://127.0.0.1:5000/mapsRT/get-json?file=${file}`);
     if (!response.ok) {
       throw new Error(`Error HTTP para SPHI: ${response.status}`);
     }
@@ -27,7 +27,7 @@ async function fetchRawRotiData(file) {
 
   isFetching.roti = true; // Activa el flag
   try {
-    const response = await fetch(`http://127.0.0.1:5000/rtMap/get-roti-json`);
+    const response = await fetch(`http://127.0.0.1:5000/mapsRT/get-roti-json`);
     if (!response.ok) {
       throw new Error(`Error HTTP para ROTI: ${response.status}`);
     }
@@ -46,7 +46,7 @@ async function fetchRawS4Data(file) {
 
   isFetching.s4 = true; // Activa el flag
   try {
-    const response = await fetch(`http://127.0.0.1:5000/rtMap/get-roti-json`);
+    const response = await fetch(`http://127.0.0.1:5000/mapsRT/get-roti-json`);
     if (!response.ok) {
       throw new Error(`Error HTTP para S4: ${response.status}`);
     }
