@@ -21,6 +21,11 @@
 
   Ctrl + Shift + P --> select: Python: Select Interpreter
 
+# AWS
+
+`sudo lsof -i`
+
+`sudo kill -9 <PID>` Detiene procesos
 
 # UOC Boilerplate
 

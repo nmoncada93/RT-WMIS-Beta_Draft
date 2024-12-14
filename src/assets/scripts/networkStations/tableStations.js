@@ -1,7 +1,7 @@
 
 function fetchData() {
   // Fetch data from the API
-  fetch('http://127.0.0.1:5000/api/network-stations')
+  fetch("http://3.254.186.70:55001/api/network-stations")
       .then(response => {
           if (!response.ok) {
               throw new Error('No data available in the UPC server');

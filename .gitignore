@@ -1,5 +1,6 @@
 backend/venv/
 backend/__pycache__/
+backend/ReadmeAWS.md
 
 # Ignorar todo el contenido de backend/upc_tmp
 /backend/upc_tmp/*
