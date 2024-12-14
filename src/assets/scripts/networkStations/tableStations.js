@@ -1,4 +1,11 @@
 
+const fetch = require('node-fetch');
+const https = require('https');
+
+const agent = new https.Agent({
+  rejectUnauthorized: false, // Ignora certificados no válidos
+});
+
 function fetchData() {
   // Fetch data from the API
   fetch("https://3.245.163.23/api/network-stations")
