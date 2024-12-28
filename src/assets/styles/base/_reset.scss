@@ -131,6 +131,8 @@ body {
   font-smooth: always; // Optional
   -webkit-font-smoothing: antialiased; // Optional
   -moz-osx-font-smoothing: grayscale; // Optional, improves typography
+  display: flex;
+  flex-direction: column;
 }
 
 /********************************************************
@@ -148,34 +150,44 @@ h3::selection,
 h4::selection,
 h5::selection,
 h6::selection {
-  background-color: transparent; /* Hace que el subrayado sea transparente */
-  color: inherit; /* Mantiene el color del texto original */
+  background-color: transparent;
+  /* Hace que el subrayado sea transparente */
+  color: inherit;
+  /* Mantiene el color del texto original */
 }
 
 /* Estilo para toda la barra de desplazamiento */
 ::-webkit-scrollbar {
-  width: 12px; /* Ancho de la barra de desplazamiento vertical */
-  height: 12px; /* Ancho de la barra de desplazamiento horizontal */
+  width: 12px;
+  /* Ancho de la barra de desplazamiento vertical */
+  height: 12px;
+  /* Ancho de la barra de desplazamiento horizontal */
 }
 
 /* Estilo para la parte de la barra de desplazamiento (el track) */
 ::-webkit-scrollbar-track {
-  background-color: #f0f0f0; /* Color del fondo de la barra */
-  border-radius: 10px; /* Bordes redondeados del track */
+  background-color: #f0f0f0;
+  /* Color del fondo de la barra */
+  border-radius: 10px;
+  /* Bordes redondeados del track */
 }
 
 /* Estilo para la parte de la barra que se mueve (el thumb) */
 ::-webkit-scrollbar-thumb {
-  background-color: #ff6600; /* Color de la parte que se mueve (thumb) */
-  border-radius: 10px; /* Bordes redondeados del thumb */
+  background-color: #ff6600;
+  /* Color de la parte que se mueve (thumb) */
+  border-radius: 10px;
+  /* Bordes redondeados del thumb */
 }
 
 /* Estilo cuando el usuario pasa el cursor sobre el thumb */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #ff4500; /* Color cuando pasas el cursor (hover) */
+  background-color: #ff4500;
+  /* Color cuando pasas el cursor (hover) */
 }
 
 /* Estilo para las esquinas si hay barras de desplazamiento horizontales y verticales */
 ::-webkit-scrollbar-corner {
-  background-color: #ffffff; /* Color del área donde se cruzan las barras de desplazamiento */
+  background-color: #ffffff;
+  /* Color del área donde se cruzan las barras de desplazamiento */
 }

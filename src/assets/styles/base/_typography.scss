@@ -15,29 +15,27 @@ html {
 }
 
 .titleH1,
-.titleH2, 
+.titleH2,
 .titleH3 {
   margin: 0 auto;
-  width: 80%;
   text-align: center;
   line-height: $lineHeightTitles;
   letter-spacing: $letterSpacingTitles;
+  text-transform: uppercase;
 }
 
 .titleH1 {
-  // CONTAINER ASPECT
-  margin-top: 4%;
+  margin-top: 2%;
   margin-bottom: 2%;
-
-  // FONT CONFIG.
   font: 600 $fontSizeH1 $fontFamilyH1;
+
+  &--landing {
+    color: $pureWhite;
+  }
 }
 
 .titleH2 {
-  // CONTAINER ASPECT
   margin-bottom: 1%;
-
-  // FONT CONFIG.
   font: 600 $fontSizeH2 $fontFamilyH2;
 }
 
@@ -46,24 +44,13 @@ html {
 }
 
 .normalText {
-  // CONTAINER ASPECT
   margin: 0 auto;
   margin-bottom: 3.6rem; //WCAG 2.1 (criterio 1.4.12: Espaciado del texto),
   width: 80%;
-
-  // FONT CONFIG.
   font-family: $fontSizeText;
   font-size: $fontSizeText;
   line-height: $lineHeightText;
   letter-spacing: $letterSpacingText;
-}
-
-.mb-0 {
-  margin-bottom: 0;
-}
-
-.bold {
-  font-weight: bold;
 }
 
 /********************************************************
@@ -83,12 +70,6 @@ html {
 *                       FOOTER                           *
 *                                                        *
 ********************************************************/
-
-.footerTitle {
-  font: 500 16px $fontFamilyH2;
-  letter-spacing: $letterSpacingText;
-}
-
 .footerLink {
   transition: color 0.6s ease, transform 0.5s ease, text-shadow 0.8s ease;
 
@@ -102,10 +83,17 @@ html {
   font: 400 1.2rem $fontFamilyText;
   letter-spacing: $letterSpacingText;
   line-height: 1.8;
+
+  &__h2 {
+    font: 500 1.6rem $fontFamilyH2;
+  letter-spacing: $letterSpacingText;
+  }
+
+  &__a {}
 }
 
 .footerCopy {
-  font: italic 400 1rem  $fontFamilyText;
+  font: italic 400 1rem $fontFamilyText;
 }
 
 /********************************************************
@@ -113,7 +101,8 @@ html {
 *                       LOGOS                            *
 *                                                        *
 ********************************************************/
-.headerLogo {
+.logo,
+.logo {
   &__a {
     font-size: $fontSizeLogoTitle;
     font-family: $fontFamilyH2;
@@ -127,19 +116,7 @@ html {
   }
 }
 
-.footerLogo {
-  &__a {
-    font-size: $fontSizeLogoTitle;
-    font-family: $fontFamilyH2;
-    font-weight: 500;
-    letter-spacing: $letterSpacingTitles;
-  }
 
-  &__subtitle {
-    font-weight: 400;
-    font-size: $fontSizeLogoSubtitle;
-  }
-}
 
 /********************************************************
 *                                                        *
@@ -157,3 +134,18 @@ html {
 *                         TABLES                         *
 *                                                        *
 ********************************************************/
+
+
+/********************************************************
+*                                                        *
+*                         UTILITIES                      *
+*                                                        *
+********************************************************/
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.bold {
+  font-weight: bold;
+}

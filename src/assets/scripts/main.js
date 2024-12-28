@@ -76,8 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
  **************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
-  const header = document.querySelector(".headerContainer"); 
-  const headerLogo = document.querySelector(".headerLogo");
+  const header = document.querySelector(".headerContainer");
+  const headerLogo = document.querySelector(".logo");
   const menuToggle = document.querySelector(".menuToggle");
   const headerNav = document.querySelector(".headerNav");
   const footerContainer = document.querySelector(".footerContainer");
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (footerContainer) footerContainer.style.background = COLORS.background;
 
     if (svgGradiente) {
-      svgGradiente.innerHTML =`
+      svgGradiente.innerHTML = `
       <stop offset="0" stop-color="${COLORS.svgGradientStart}" stop-opacity="1" />
         <stop offset="0.5" stop-color="${COLORS.svgGradientMiddle}" stop-opacity="0.7" />
         <stop offset="1" stop-color="${COLORS.svgGradientEnd}" stop-opacity="1" />

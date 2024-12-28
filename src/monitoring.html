@@ -53,7 +53,7 @@
         <main class="mainContainer">
             <h1 class="titleH1">Monitoring</h1>
 
-            <div class="bodyDecorLine"></div>
+            <div class="decorline decorline--body"></div>
 
             <div class="generalContainer">
                 <!------------------------- REAL-TIME INDEX ----------------------------------->
@@ -174,11 +174,11 @@
                         </select>
 
                         <div class="btnsContainer">
-                            <button id="s4Button" class="selectBtn">S4</button>
-                            <button id="rotiButton" class="selectBtn">
+                            <button id="s4Button" class="primaryBtn">S4</button>
+                            <button id="rotiButton" class="primaryBtn">
                                 ROTI L1
                             </button>
-                            <button id="sphiButton" class="selectBtn">
+                            <button id="sphiButton" class="primaryBtn">
                                 SigmaPhi
                             </button>
                         </div>
@@ -195,7 +195,7 @@
                         <div class="chartIndex" id="chart"></div>
                     </div>
                     <button
-                        class="callToAction"
+                        class="secondaryBtn"
                         id="closeChartButton"
                         style="display: none"
                     >
@@ -222,7 +222,7 @@
 
                     <div id="sphiMapContainer" class="mapRTContainer">
                         <svg id="sphiMapRender"></svg>
-                        <button class="callToAction" id="closeSphiMapBtn">
+                        <button class="secondaryBtn" id="closeSphiMapBtn">
                             RESET
                         </button>
                     </div>
@@ -236,7 +236,7 @@
 
                     <div id="rotiMapContainer" class="mapRTContainer">
                         <svg id="rotiMapRender"></svg>
-                        <button class="callToAction" id="closeRotiMapBtn">
+                        <button class="secondaryBtn" id="closeRotiMapBtn">
                             RESET
                         </button>
                     </div>
@@ -250,7 +250,7 @@
 
                     <div id="s4MapContainer" class="mapRTContainer">
                         <svg id="s4MapRender"></svg>
-                        <button class="callToAction" id="closeS4MapBtn">
+                        <button class="secondaryBtn" id="closeS4MapBtn">
                             RESET
                         </button>
                     </div>
@@ -378,28 +378,49 @@
                         </div>
 
                         <div class="btnsContainer">
-                            <button class="selectBtn">S4</button>
-                            <button class="selectBtn">ROTI L1</button>
-                            <button class="selectBtn">SigmaPhi</button>
+                            <button
+                                class="primaryBtn primaryPRBtn"
+                                id="s4IndexPRBtn"
+                            >
+                                S4
+                            </button>
+                            <button
+                                class="primaryBtn primaryPRBtn"
+                                id="rotiIndexPRBtn"
+                            >
+                                ROTI L1
+                            </button>
+                            <button
+                                class="primaryBtn primaryPRBtn"
+                                id="sphiIndexPRBtn"
+                            >
+                                SigmaPhi
+                            </button>
                         </div>
                         <!--------------- selectorsContainer ------------------->
                     </div>
 
-                    <div id="output"></div>
+                    <div id="noDataMessagePRindex" style="display: none"></div>
 
-                    <div
-                        id="pastChart"
-                        style="width: 600px; height: 400px"
-                    ></div>
+                    <div id="loadingMessagePRindex" style="display: none">
+                        <div class="loading-message">
+                            <span>Searching in database...</span>
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+                    <div class="chartPRContainer" id="indexPRContainer">
+                        <div class="chartPRIndex" id="pastChart"></div>
+                    </div>
                 </div>
 
                 <div class="boxContainer recordsBox">
                     <h2 class="titleH2">PAST MAPS</h2>
 
                     <div class="btnsContainer">
-                        <button class="selectBtn">S4</button>
-                        <button class="selectBtn">ROTI L1</button>
-                        <button class="selectBtn">SigmaPhi</button>
+                        <button class="primaryBtn">S4</button>
+                        <button class="primaryBtn">ROTI L1</button>
+                        <button class="primaryBtn">SigmaPhi</button>
                     </div>
                 </div>
                 <!------------------------ PAST MAPS ----------------------------------------->

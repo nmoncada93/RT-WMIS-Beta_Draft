@@ -1,405 +1,649 @@
-//---------------------------------------------------------------------------------------------
-// Importa las funciones del módulo past_unxz_calendar y echarts
-import * as echarts from 'echarts';
-import { getSelectedDateInfo, processSphiData } from './past_unxz_calendar.js';
+import { renderChart, resetChart } from './indexPRChart.js';
+import { getSelectedDate, processIndexData } from './indexPRUnxz.js';
 
-// [A] Variables Globales para almacenar los datos de SPHI en PAST RECORDS -----
+// [A] Variables Globales
 let pastRecordsData = {
-  sphi: null  // Esta variable almacenará el JSON de sphi.tmp
+  sphi: null,  // Almacena el JSON de sphi.tmp
+  roti: null   // Almacena el JSON de roti.tmp
 };
+let activeIndex = null;  // Índice activo (sphi, roti)
+let selectedStation = ""; // Estación seleccionada
+let activeChart = null;  // Referencia global al gráfico activo
 
-let selectedStation = ""; // Variable para almacenar la estación seleccionada
-
-// [B] Función para obtener los datos de sphi.tmp desde el backend -------------
-function fetchSphiData(year, doy) {
+// [D] Función para obtener los datos de sphi.tmp desde el backend
+async function fetchSphiData(year, doy) {
   const url = `http://127.0.0.1:5000/indexPR/api/read-sphi/${year}/${doy}`;
 
-  //console.log("Solicitando datos de sphi.tmp a:", url);
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error obtaining sphi.tmp for selected date");
+    }
 
-  return fetch(url)
-    .then(response => {
-      //console.log("Respuesta de sphi.tmp recibida:", response);
-      if (!response.ok) {
-        throw new Error("Error al obtener los datos de sphi.tmp para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(data => {
-      pastRecordsData.sphi = data; // Almacenar los datos en la variable global
-      //console.log("Datos de sphi.tmp almacenados en pastRecordsData.sphi:", pastRecordsData.sphi);
-      alert("Datos de sphi.tmp obtenidos y almacenados");
-      return data; // Devuelve los datos obtenidos
-    });
+    const data = await response.json();
+    pastRecordsData.sphi = data;
+    console.log("Data from sphi.tmp obtained and stored");
+
+    return data;
+  } catch (error) {
+    console.error("Error during sphi.tmp request:", error);
+    handleNoData("No data available for the selected date. Please try again later or choose another date!");
+  }
 }
 
-// [C] Función para detectar la estación seleccionada y graficar --------------
+// [D1] Nueva función para obtener los datos de roti.tmp desde el backend
+async function fetchRotiData(year, doy) {
+
+  const url = `http://127.0.0.1:5000/indexPR/api/read-roti/${year}/${doy}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error obtaining roti.tmp for selected date");
+    }
+
+    const data = await response.json();
+    pastRecordsData.roti = data;
+    console.log("Data from roti.tmp obtained and stored");
+
+    const stationSelector = document.getElementById("pastStationSelector");
+    stationSelector.style.display = 'block';
+    updateStationSelector(data);
+
+    return data;
+  } catch (error) {
+    console.error("Error during roti.tmp request:", error);
+    handleNoData("No data available for the selected date. Please try again later or choose another date!");
+  }
+}
+
+// [C] Función para detectar la estación seleccionada
 function detectSelectedStation() {
   const stationSelector = document.getElementById("pastStationSelector");
   selectedStation = stationSelector.value;
-  //selectedStation = stationSelector.value.split('_')[0];
   console.log("Estación seleccionada:", selectedStation);
-
-  // Llama a la función para filtrar y graficar los datos
-  updateSphiChart(pastRecordsData.sphi, selectedStation);
 }
 
-// [D] Función para actualizar el gráfico de SPHI sin ajustes responsivos -----
-function updateSphiChart(data, station) {
-  const chartDom = document.getElementById('pastChart');
+// [E] Función para actualizar estaciones en el selector
+function updateStationSelector(data) {
+  const stationSelector = document.getElementById("pastStationSelector");
+  const availableStations = data.map(item => item[1]);  // Extraer estaciones
+  //hideLoadingSpinner();
+  handlerSpinner(false);
 
-  // Verificar si el contenedor tiene dimensiones
-  if (chartDom.clientWidth === 0 || chartDom.clientHeight === 0) {
-      console.warn("No es posible renderizar grafico");
-      return;
-  }
 
-  // Filtrar los datos según la estación seleccionada
-  const filteredData = data.filter(item => item[1] === station);
-  if (filteredData.length === 0) {
-      console.warn("No se encontraron datos para la estación seleccionada.");
-      return;
-  }
-
-  const myChart = echarts.init(chartDom);
-
-  const scatterData = filteredData.map(item => [item[0], item[5]]);
-  const option = {
-      title: { text: `Sigma_phi L1 para ${station}` },
-      tooltip: { trigger: 'item' },
-      xAxis: { type: 'value', name: 'Time (seconds of the day)', nameLocation: 'center', nameGap: 40 },
-      yAxis: { type: 'value', name: 'Sigma_phi L1 (radian)' },
-      series: [{
-          name: 'Sigma_phi L1',
-          type: 'scatter',
-          data: scatterData,
-          itemStyle: { color: '#32a852', opacity: 0.5 },
-          symbolSize: 4
-      }]
-  };
-
-  // Configuración del gráfico
-  myChart.setOption(option);
+  Array.from(stationSelector.options).forEach(option => {
+    const stationCode = option.value;
+    if (!availableStations.includes(stationCode)) {
+      option.classList.add('no-data');
+      option.disabled = true;
+    } else {
+      option.classList.remove('no-data');
+      option.disabled = false;
+    }
+  });
 }
 
-// [E] Evento para capturar la fecha seleccionada ------------------------------
+// [M] Función para marcar el botón activo y desactivar el resto
+function setActiveButton(button) {
+  const buttons = document.querySelectorAll(".primaryPRBtn");
+  buttons.forEach(btn => btn.classList.remove("active-button"));
+  button.classList.add("active-button");
+}
+
+// [H] Función para resetear el estado de UI al hacer focus en el calendario
+function resetUI() {
+  const stationSelector = document.getElementById("pastStationSelector");
+  document.getElementById("indexPRContainer").style.display = 'none';
+
+  // Ocultar selector de estaciones
+  stationSelector.style.display = 'none';
+
+  // Eliminar el gráfico activo si existe
+  if (activeChart) {
+    activeChart.dispose();
+    activeChart = null;
+    console.log("Gráfico eliminado.");
+  }
+  // Resetear el selector de estaciones
+  stationSelector.value = "";
+
+  // Desactivar y ocultar todos los botones de índice
+  const buttons = document.querySelectorAll(".primaryPRBtn");
+  buttons.forEach(btn => {
+    btn.classList.remove("active-button");
+    btn.style.display = 'none';  // Oculta los botones nuevamente
+  });
+
+  // Reinicia Indice activo
+  activeIndex = null;
+}
+
+// [K] Función para mostrar botones de índice solo si hay estación seleccionada
+function showIndexButtons() {
+  const buttons = document.querySelectorAll('.primaryPRBtn');
+
+  if (selectedStation && (pastRecordsData.sphi || pastRecordsData.roti)) {
+    buttons.forEach(btn => {
+      btn.style.display = 'inline-block';
+    });
+  }
+}
+
+// [J] Mostrar/ocultar spinner de carga
+function handlerSpinner(show) {
+  const spinner = document.getElementById('loadingMessagePRindex');
+  spinner.style.display = show ? 'flex' : 'none';
+  console.log(show ? "Spinner mostrado" : "Spinner oculto");
+}
+
+// [Z] Función para manejar errores de datos o solicitudes fallidas
+function handleNoData(message = "No data available for the selected date.") {
+  const noDataMessage = document.getElementById('noDataMessagePRindex');
+  handlerSpinner(false);
+  noDataMessage.innerHTML = `<p style="color: #ff6600; font-weight: bold;">${message}</p>`;
+  noDataMessage.style.display = 'block';
+  resetUI();
+}
+
+
+//=======================================================================================
+//==============================  LISTENERS =============================================
+//=======================================================================================
+
+// [B] Evento para capturar la fecha seleccionada
 document.getElementById("dateInput").addEventListener("change", function () {
-  const { year, doy } = getSelectedDateInfo(this.value); // Llama a la función del módulo
+  const { year, doy } = getSelectedDate(this.value);
   console.log("Fecha seleccionada:", this.value, "Año:", year, "Día del año (DoY):", doy);
-
-  // Llamada a la función principal para procesar los datos de sphi.tmp
-  processSphiData(year, doy, fetchSphiData); // Llama a la función en el módulo
+  //showLoadingSpinner();
+  handlerSpinner(true);
+  resetChart();
+  document.getElementById('noDataMessagePRindex').style.display = 'none';
+  processIndexData(year, doy, fetchSphiData, fetchRotiData);
 });
 
-// [F] Evento para capturar la estación seleccionada y actualizar el gráfico ----
-document.getElementById("pastStationSelector").addEventListener("change", detectSelectedStation);
+// [G] Reset UI cuando el calendario obtiene foco
+document.getElementById("dateInput").addEventListener("change", resetUI);
 
-// [G] Llamada inicial para obtener los datos al cargar la página --------------
-fetchSphiData(); // Esta función debe ejecutarse para inicializar los datos al cargar
-
-
-/*
-// [A] Variables Globales para almacenar los datos de SPHI en PAST RECORDS -----
-let pastRecordsData = {
-  sphi: null  // Esta variable almacenará el JSON de sphi.tmp
-};
-
-// [B] Función para descomprimir los archivos en el backend -------------------
-function decompressFiles(year, doy) {
-  const decompressUrl = `http://127.0.0.1:5000/descomprimir-archivos/${year}/${doy}`;
-  console.log("Solicitando descompresión a:", decompressUrl);
-
-  return fetch(decompressUrl, { method: 'POST' })
-    .then(response => {
-      console.log("Respuesta de descompresión recibida:", response);
-      if (!response.ok) {
-        throw new Error("Error en la descompresión para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(decompressData => {
-      console.log("Datos de descompresión:", decompressData);
-      alert("Descompresión completada con éxito!");
-      return decompressData; // Devuelve los datos de la descompresión
-    });
-}
-
-// [C] Función para obtener los datos de sphi.tmp desde el backend -------------
-function fetchSphiData(year, doy) {
-  const url = `http://127.0.0.1:5000/api/read-sphi/${year}/${doy}`;
-  console.log("Solicitando datos de sphi.tmp a:", url);
-
-  return fetch(url)
-    .then(response => {
-      console.log("Respuesta de sphi.tmp recibida:", response);
-      if (!response.ok) {
-        throw new Error("Error al obtener los datos de sphi.tmp para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(data => {
-      pastRecordsData.sphi = data; // Almacenar los datos en la variable global
-      console.log("Datos de sphi.tmp almacenados en pastRecordsData.sphi:", pastRecordsData.sphi);
-      alert("Datos de sphi.tmp obtenidos y almacenados con éxito!");
-      return data; // Devuelve los datos obtenidos
-    });
-}
-
-// [D] Función principal que coordina el proceso -------------------------------
-function processSphiData(year, doy) {
-  decompressFiles(year, doy)
-    .then(() => fetchSphiData(year, doy))
-    .catch(error => {
-      console.error("Error en el proceso de obtención de datos:", error);
-      alert("Error en el proceso de descompresión o lectura de datos para la fecha seleccionada.");
-    });
-}
-
-// [E] Evento para capturar la fecha seleccionada ------------------------------
-document.getElementById("dateInput").addEventListener("change", function () {
-  const selectedDate = new Date(this.value);
-  const year = selectedDate.getFullYear();
-  const startOfYear = new Date(year, 0, 0);
-  const diff = selectedDate - startOfYear;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const doy = Math.floor(diff / oneDay);
-
-  console.log("Fecha seleccionada:", selectedDate, "Año:", year, "Día del año (DoY):", doy);
-
-  // Llamada a la función principal para procesar los datos de sphi.tmp
-  processSphiData(year, doy);
-});
-
-
-
-
-
-
-
-/*
-import * as echarts from 'echarts';
-
-// [A] Variables Globales para almacenar los datos de SPHI en PAST RECORDS -----
-let pastRecordsData = {
-  sphi: null  // Esta variable almacenará el JSON de sphi.tmp
-};
-
-// [B] Función para obtener los datos de sphi.tmp desde el backend -------------
-function fetchSphiData(year, doy) {
-  const decompressUrl = `http://127.0.0.1:5000/descomprimir-archivos/${year}/${doy}`;
-  console.log("Iniciando descompresión en:", decompressUrl);
-
-  return fetch(decompressUrl, { method: 'POST' })
-    .then(response => {
-      console.log("Respuesta de descompresión:", response);
-      if (!response.ok) {
-        throw new Error("Error en la descompresión para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(decompressData => {
-      console.log("Resultado de la descompresión:", decompressData);
-      alert("Descompresión completada con éxito!");
-
-      const url = `http://127.0.0.1:5000/api/read-sphi/${year}/${doy}`;
-      console.log("Solicitando datos de sphi.tmp desde:", url);
-      return fetch(url);
-    })
-    .then(response => {
-      console.log("Respuesta de sphi.tmp:", response);
-      if (!response.ok) {
-        throw new Error("Error al obtener los datos de sphi.tmp para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(data => {
-      pastRecordsData.sphi = data;
-      console.log("Datos de sphi.tmp almacenados en pastRecordsData.sphi:", pastRecordsData.sphi);
-      alert("Datos de sphi.tmp obtenidos y almacenados con éxito!");
-    })
-    .catch(error => {
-      console.error("Error en el proceso de obtención de datos:", error);
-      alert("Error en el proceso de descompresión o lectura de datos para la fecha seleccionada.");
-    });
-}
-
-// [C] Evento para capturar la fecha seleccionada ------------------------------
-document.getElementById("dateInput").addEventListener("change", function () {
-  const selectedDate = new Date(this.value);
-  const year = selectedDate.getFullYear();
-  const startOfYear = new Date(year, 0, 0);
-  const diff = selectedDate - startOfYear;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const doy = Math.floor(diff / oneDay);
-
-  console.log("Fecha seleccionada:", selectedDate, "Año:", year, "Día del año (DoY):", doy);
-
-  // Llamada a la función fetchSphiData con el año y el día del año (DoY)
-  fetchSphiData(year, doy);
-});
-
-// [D] Evento para la selección de estación ------------------------------------
+// [I] Evento para capturar la estación y renderizar automáticamente si hay índice activo
 document.getElementById("pastStationSelector").addEventListener("change", function () {
-  const selectedStation = this.value.split('_')[0]; // Obtener el código de la estación
-  console.log("Estación seleccionada:", selectedStation);
-
-  // Verificar que los datos de sphi están disponibles y filtrar por estación
-  if (!pastRecordsData.sphi) {
-    alert("No se han cargado datos para la fecha seleccionada. Selecciona una fecha primero.");
-    return;
+  detectSelectedStation();
+  showIndexButtons();
+  if (activeIndex) {
+    const dataToRender = activeIndex === 's4' ? pastRecordsData['roti'] : pastRecordsData[activeIndex];
+    if (dataToRender) {
+      renderChart(dataToRender, selectedStation, activeIndex);
+    }
   }
-
-  const filteredData = pastRecordsData.sphi.filter(item => item[1] === selectedStation); // Filtrar por estación
-  console.log("Datos filtrados para la estación seleccionada:", filteredData);
-
-  if (filteredData.length === 0) {
-    alert("No hay datos disponibles para la estación seleccionada.");
-    return;
-  }
-
-  // Llamar a la función para graficar los datos filtrados
-  generateChart(filteredData, selectedStation);
 });
 
-// [E] Función para generar el gráfico usando Echarts --------------------------
-function generateChart(data, station) {
-  const chartDom = document.getElementById('pastChart');
-  const myChart = echarts.init(chartDom);
+// [L1] Renderizar SPHI
+document.getElementById("sphiIndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.sphi && selectedStation) {
+    activeIndex = 'sphi';
+    // [1] Muestra el contenedor antes de renderizar
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.sphi, selectedStation, 'sphi');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    console.log("Selecciona una estación antes de generar el gráfico.");
+  }
+});
 
-  const scatterData = data.map(item => [item[0], item[5]]); // columna 1 (tiempo) en X y columna 6 (sphiL1) en Y
+// [L2] Renderizar ROTI
+document.getElementById("rotiIndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.roti && selectedStation) {
+    activeIndex = 'roti';
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.roti, selectedStation, 'roti');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    console.log("Selecciona una estación antes de generar el gráfico.");
+  }
+});
 
-  const option = {
-    title: { text: `Sigma_phi L1 para la estación ${station}` },
-    tooltip: { trigger: 'item' },
-    xAxis: { type: 'value', name: 'Tiempo (segundos del día)', nameLocation: 'center', nameGap: 30 },
-    yAxis: { type: 'value', name: 'Sigma_phi L1 (radianes)' },
-    series: [{
-      name: 'Sigma_phi L1',
-      type: 'scatter',
-      data: scatterData,
-      itemStyle: { color: '#32a852', opacity: 0.5 },
-      symbolSize: 4
-    }]
-  };
-
-  // Configurar el gráfico
-  myChart.setOption(option);
-}
-
-
-
-
-
+// [L3] Renderizar S4
+document.getElementById("s4IndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.roti && selectedStation) {
+    activeIndex = 's4';
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.roti, selectedStation, 's4');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    console.log("Selecciona una estación antes de generar el gráfico.");
+  }
+});
 
 
 /*
-// [A] Variables Globales para almacenar los datos de SPHI en PAST RECORDS -----
+import { renderChart, resetChart } from './indexPRChart.js';
+import { getSelectedDateInfo, processIndexData } from './past_unxz_calendar.js';
+
+// [A] Variables Globales
 let pastRecordsData = {
-  sphi: null  // Esta variable almacenará el JSON de sphi.tmp
+  sphi: null,  // Almacena el JSON de sphi.tmp
+  roti: null   // Almacena el JSON de roti.tmp
 };
+let activeIndex = null;  // Índice activo (sphi, roti)
+let selectedStation = ""; // Estación seleccionada
+let activeChart = null;  // Referencia global al gráfico activo
 
-// [B] Función para obtener los datos de sphi.tmp desde el backend -------------
-function fetchSphiData(year, doy) {
-  // URL para descomprimir archivos
-  const decompressUrl = `http://127.0.0.1:5000/descomprimir-archivos/${year}/${doy}`;
-  console.log("Solicitando descompresión a:", decompressUrl);
+// [D] Función para obtener los datos de sphi.tmp desde el backend
+async function fetchSphiData(year, doy) {
+  const url = `http://127.0.0.1:5000/api/read-sphi/${year}/${doy}`;
 
-  return fetch(decompressUrl, { method: 'POST' })
-    .then(response => {
-      console.log("Respuesta de descompresión recibida:", response);
-      if (!response.ok) {
-        throw new Error("Error en la descompresión para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(decompressData => {
-      console.log("Datos de descompresión:", decompressData);
-      alert("Descompresión completada con éxito!");
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos de sphi.tmp para la fecha seleccionada");
+    }
 
-      // Después de la descompresión, solicitar los datos de sphi.tmp
-      const url = `http://127.0.0.1:5000/api/read-sphi/${year}/${doy}`;
-      console.log("Solicitando datos de sphi.tmp a:", url);
+    const data = await response.json();
+    pastRecordsData.sphi = data;
+    console.log("Datos de sphi.tmp obtenidos y almacenados");
 
-      return fetch(url);
-    })
-    .then(response => {
-      console.log("Respuesta de sphi.tmp recibida:", response);
-      if (!response.ok) {
-        throw new Error("Error al obtener los datos de sphi.tmp para la fecha seleccionada");
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Almacenar los datos de sphi.tmp en pastRecordsData.sphi
-      pastRecordsData.sphi = data;
-      console.log("Datos de sphi.tmp almacenados en pastRecordsData.sphi:", pastRecordsData.sphi);
-      alert("Datos de sphi.tmp obtenidos y almacenados con éxito!");
-    })
-    .catch(error => {
-      console.error("Error en el proceso:", error);
-      alert("Error en el proceso de descompresión o lectura de datos para la fecha seleccionada.");
-    });
+    return data;
+  } catch (error) {
+    console.error("Error durante la solicitud:", error);
+    alert("Fallo al obtener los datos");
+  }
 }
 
-// [C] Evento para capturar la fecha seleccionada ------------------------------
+// [D1] Nueva función para obtener los datos de roti.tmp desde el backend
+async function fetchRotiData(year, doy) {
+
+  const url = `http://127.0.0.1:5000/api/read-roti/${year}/${doy}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos de roti.tmp");
+    }
+
+    const data = await response.json();
+    pastRecordsData.roti = data;
+    console.log("Datos de roti.tmp obtenidos y almacenados");
+
+    const stationSelector = document.getElementById("pastStationSelector");
+    stationSelector.style.display = 'block';
+    updateStationSelector(data);
+
+    return data;
+  } catch (error) {
+    console.error("Error durante la solicitud de roti.tmp:", error);
+    alert("Fallo al obtener los datos de roti.tmp");
+  }
+}
+
+// [C] Función para detectar la estación seleccionada
+function detectSelectedStation() {
+  const stationSelector = document.getElementById("pastStationSelector");
+  selectedStation = stationSelector.value;
+  console.log("Estación seleccionada:", selectedStation);
+}
+
+// [E] Función para actualizar estaciones en el selector
+function updateStationSelector(data) {
+  const stationSelector = document.getElementById("pastStationSelector");
+  const availableStations = data.map(item => item[1]);  // Extraer estaciones
+  hideLoadingSpinner();
+
+  Array.from(stationSelector.options).forEach(option => {
+    const stationCode = option.value;
+    if (!availableStations.includes(stationCode)) {
+      option.classList.add('no-data');
+      option.disabled = true;
+    } else {
+      option.classList.remove('no-data');
+      option.disabled = false;
+    }
+  });
+}
+
+// [M] Función para marcar el botón activo y desactivar el resto
+function setActiveButton(button) {
+  const buttons = document.querySelectorAll(".primaryPRBtn");
+  buttons.forEach(btn => btn.classList.remove("active-button"));
+  button.classList.add("active-button");
+}
+
+// [H] Función para resetear el estado de UI al hacer focus en el calendario
+function resetUI() {
+  const stationSelector = document.getElementById("pastStationSelector");
+  document.getElementById("indexPRContainer").style.display = 'none';
+
+  // Ocultar selector de estaciones
+  stationSelector.style.display = 'none';
+
+  // Eliminar el gráfico activo si existe
+  if (activeChart) {
+    activeChart.dispose();
+    activeChart = null;
+    console.log("Gráfico eliminado.");
+  }
+  // Resetear el selector de estaciones
+  stationSelector.value = "";
+
+  // Desactivar y ocultar todos los botones de índice
+  const buttons = document.querySelectorAll(".primaryPRBtn");
+  buttons.forEach(btn => {
+    btn.classList.remove("active-button");
+    btn.style.display = 'none';  // Oculta los botones nuevamente
+  });
+
+  // Reiniciar índice activo
+  activeIndex = null;
+}
+
+// [K] Función para mostrar botones de índice solo si hay estación seleccionada
+function showIndexButtons() {
+  const buttons = document.querySelectorAll('.primaryPRBtn');
+
+  // Verifica si hay datos y una estación seleccionada
+  if (selectedStation && (pastRecordsData.sphi || pastRecordsData.roti)) {
+    buttons.forEach(btn => {
+      btn.style.display = 'inline-block';
+    });
+  } else {
+    console.log("Los botones no se muestran porque no hay estación seleccionada.");
+  }
+}
+
+// [J] Mostrar el spinner de carga
+function showLoadingSpinner() {
+  const spinner = document.getElementById('loadingMessagePRindex');
+  spinner.style.display = 'flex';
+  console.log("Spinner mostrado");
+}
+
+// [F] Ocultar el spinner de carga
+function hideLoadingSpinner() {
+  const spinner = document.getElementById('loadingMessagePRindex');
+  spinner.style.display = 'none';
+}
+
+//=======================================================================================
+//==============================  LISTENERS =============================================
+//=======================================================================================
+
+// [B] Evento para capturar la fecha seleccionada
 document.getElementById("dateInput").addEventListener("change", function () {
-  const selectedDate = new Date(this.value);
-  const year = selectedDate.getFullYear();
-  const startOfYear = new Date(year, 0, 0);
-  const diff = selectedDate - startOfYear;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const doy = Math.floor(diff / oneDay);
-
-  console.log("Fecha seleccionada:", selectedDate, "Año:", year, "Día del año:", doy);
-
-  // Llamada a la función fetchSphiData con el año y el día del año (DoY)
-  fetchSphiData(year, doy);
+  const { year, doy } = getSelectedDateInfo(this.value);
+  console.log("Fecha seleccionada:", this.value, "Año:", year, "Día del año (DoY):", doy);
+  showLoadingSpinner();
+  resetChart();
+  processIndexData(year, doy, fetchSphiData, fetchRotiData);
 });
 
+// [G] Reset UI cuando el calendario obtiene foco
+document.getElementById("dateInput").addEventListener("change", resetUI);
+
+// [I] Evento para capturar la estación y renderizar automáticamente si hay índice activo
+document.getElementById("pastStationSelector").addEventListener("change", function () {
+  detectSelectedStation();
+  showIndexButtons();
+  if (activeIndex) {
+    const dataToRender = activeIndex === 's4' ? pastRecordsData['roti'] : pastRecordsData[activeIndex];
+    if (dataToRender) {
+      renderChart(dataToRender, selectedStation, activeIndex);
+    }
+  }
+});
+
+// [L1] Renderizar SPHI
+document.getElementById("sphiIndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.sphi && selectedStation) {
+    activeIndex = 'sphi';
+    // [1] Muestra el contenedor antes de renderizar
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.sphi, selectedStation, 'sphi');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    alert("Selecciona una estación antes de generar el gráfico.");
+  }
+});
+
+// [L2] Renderizar ROTI
+document.getElementById("rotiIndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.roti && selectedStation) {
+    activeIndex = 'roti';
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.roti, selectedStation, 'roti');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    alert("Selecciona una estación antes de generar el gráfico.");
+  }
+});
+
+// [L3] Renderizar S4
+document.getElementById("s4IndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.roti && selectedStation) {
+    activeIndex = 's4';
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.roti, selectedStation, 's4');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    alert("Selecciona una estación antes de generar el gráfico.");
+  }
+});
 */
 
 
-
-
-
 /*
-// [A] Evento para capturar la fecha seleccionada --------------------------------
+import { renderChart, resetChart } from './indexPRChart.js';
+import { getSelectedDateInfo, processIndexData } from './past_unxz_calendar.js';
+
+// [A] Variables Globales
+let pastRecordsData = {
+  sphi: null,  // Almacena el JSON de sphi.tmp
+  roti: null   // Almacena el JSON de roti.tmp
+};
+let activeIndex = null;  // Índice activo (sphi, roti)
+let selectedStation = ""; // Estación seleccionada
+let activeChart = null;  // Referencia global al gráfico activo
+
+// [B] Función para obtener los datos de sphi.tmp desde el backend
+async function fetchSphiData(year, doy) {
+  const url = `http://127.0.0.1:5000/api/read-sphi/${year}/${doy}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos de sphi.tmp para la fecha seleccionada");
+    }
+
+    const data = await response.json();
+    pastRecordsData.sphi = data;
+    console.log("Datos de sphi.tmp obtenidos y almacenados");
+
+    return data;
+  } catch (error) {
+    console.error("Error durante la solicitud:", error);
+    alert("Fallo al obtener los datos");
+  }
+}
+
+// [B.1] Nueva función para obtener los datos de roti.tmp desde el backend
+async function fetchRotiData(year, doy) {
+
+  const url = `http://127.0.0.1:5000/api/read-roti/${year}/${doy}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos de roti.tmp");
+    }
+
+    const data = await response.json();
+    pastRecordsData.roti = data;
+    console.log("Datos de roti.tmp obtenidos y almacenados");
+
+    const stationSelector = document.getElementById("pastStationSelector");
+    stationSelector.style.display = 'block';
+    updateStationSelector(data);
+
+    return data;
+  } catch (error) {
+    console.error("Error durante la solicitud de roti.tmp:", error);
+    alert("Fallo al obtener los datos de roti.tmp");
+  }
+}
+
+// [C] Función para detectar la estación seleccionada
+function detectSelectedStation() {
+  const stationSelector = document.getElementById("pastStationSelector");
+  selectedStation = stationSelector.value;
+  console.log("Estación seleccionada:", selectedStation);
+}
+
+// [D] Evento para capturar la fecha seleccionada
 document.getElementById("dateInput").addEventListener("change", function () {
-
-  // [A.1] Capturar la fecha seleccionada ---------------------------------------
-  const selectedDate = new Date(this.value);
-
-  // [A.2] Obtener el año de la fecha seleccionada ------------------------------
-  const year = selectedDate.getFullYear();
-
-  // [A.3] Calcular el día del año (DoY) ---------------------------------------
-  const startOfYear = new Date(year, 0, 0); // Día cero del año
-  const diff = selectedDate - startOfYear;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const doy = Math.floor(diff / oneDay); // Calcula DoY como un número entero
-
-  // [B] Construcción de la URL absoluta del endpoint de descompresión del backend -------
-  const url = `http://127.0.0.1:5000/descomprimir-archivos/${year}/${doy}`;
-
-  // [C] Solicitud POST al backend para descomprimir archivos -------------------
-  fetch(url, {
-    method: 'POST'
-  })
-    .then(response => {
-      // [C.1] Verificación de la respuesta del backend -------------------------
-      if (!response.ok) {
-        throw new Error("Error initiating decompression for the specified date");
-      }
-      return response.json();
-    })
-    .then(data => {
-      // [C.2] Confirmación de la descompresión -------------------------------
-      console.log("Decompression response:", data);
-      alert("Decompression completed successfully!");
-    })
-    .catch(error => {
-      // [C.3] Manejo de errores ------------------------------------------------
-      console.error("Error during decompression:", error);
-      alert("Error during decompression for the specified date.");
-    });
+  const { year, doy } = getSelectedDateInfo(this.value);
+  console.log("Fecha seleccionada:", this.value, "Año:", year, "Día del año (DoY):", doy);
+  showLoadingSpinner();
+  resetChart();
+  processIndexData(year, doy, fetchSphiData, fetchRotiData);
 });
+
+// [E] Reset UI cuando el calendario obtiene foco
+document.getElementById("dateInput").addEventListener("change", resetUI);
+
+// [F] Evento para capturar la estación y renderizar automáticamente si hay índice activo
+document.getElementById("pastStationSelector").addEventListener("change", function () {
+  detectSelectedStation();
+  showIndexButtons();
+  if (activeIndex) {
+    const dataToRender = activeIndex === 's4' ? pastRecordsData['roti'] : pastRecordsData[activeIndex];
+    if (dataToRender) {
+      renderChart(dataToRender, selectedStation, activeIndex);
+    }
+  }
+});
+
+// [G] Función para actualizar estaciones en el selector
+function updateStationSelector(data) {
+  const stationSelector = document.getElementById("pastStationSelector");
+  const availableStations = data.map(item => item[1]);  // Extraer estaciones
+  hideLoadingSpinner();
+
+  Array.from(stationSelector.options).forEach(option => {
+    const stationCode = option.value;
+    if (!availableStations.includes(stationCode)) {
+      option.classList.add('no-data');
+      option.disabled = true;
+    } else {
+      option.classList.remove('no-data');
+      option.disabled = false;
+    }
+  });
+}
+
+// [H] Renderizar SPHI
+document.getElementById("sphiIndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.sphi && selectedStation) {
+    activeIndex = 'sphi';
+    // [1] Muestra el contenedor antes de renderizar
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.sphi, selectedStation, 'sphi');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    alert("Selecciona una estación antes de generar el gráfico.");
+  }
+});
+
+// [I] Renderizar ROTI
+document.getElementById("rotiIndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.roti && selectedStation) {
+    activeIndex = 'roti';
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.roti, selectedStation, 'roti');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    alert("Selecciona una estación antes de generar el gráfico.");
+  }
+});
+
+// [J] Renderizar S4
+document.getElementById("s4IndexPRBtn").addEventListener("click", function () {
+  if (pastRecordsData.roti && selectedStation) {
+    activeIndex = 's4';
+    document.getElementById("indexPRContainer").style.display = 'flex';
+    renderChart(pastRecordsData.roti, selectedStation, 's4');
+    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    setActiveButton(this);
+  } else {
+    alert("Selecciona una estación antes de generar el gráfico.");
+  }
+});
+
+// [K] Función para marcar el botón activo y desactivar el resto
+function setActiveButton(button) {
+  const buttons = document.querySelectorAll(".primaryPRBtn");
+  buttons.forEach(btn => btn.classList.remove("active-button"));
+  button.classList.add("active-button");
+}
+
+// [L] Función para resetear el estado de UI al hacer focus en el calendario
+function resetUI() {
+  const stationSelector = document.getElementById("pastStationSelector");
+  document.getElementById("indexPRContainer").style.display = 'none';
+
+  // Ocultar selector de estaciones
+  stationSelector.style.display = 'none';
+
+  // Eliminar el gráfico activo si existe
+  if (activeChart) {
+    activeChart.dispose();
+    activeChart = null;
+    console.log("Gráfico eliminado.");
+  }
+  // Resetear el selector de estaciones
+  stationSelector.value = "";
+
+  // Desactivar y ocultar todos los botones de índice
+  const buttons = document.querySelectorAll(".primaryPRBtn");
+  buttons.forEach(btn => {
+    btn.classList.remove("active-button");
+    btn.style.display = 'none';  // Oculta los botones nuevamente
+  });
+
+  // Reiniciar índice activo
+  activeIndex = null;
+}
+
+// [M] Modificación: Evento para resetear UI al hacer foco en el calendario
+document.getElementById("dateInput").addEventListener("change", resetUI);
+
+
+// [N] Función para mostrar botones de índice solo si hay estación seleccionada
+function showIndexButtons() {
+  const buttons = document.querySelectorAll('.primaryPRBtn');
+
+  // Verifica si hay datos y una estación seleccionada
+  if (selectedStation && (pastRecordsData.sphi || pastRecordsData.roti)) {
+    buttons.forEach(btn => {
+      btn.style.display = 'inline-block';
+    });
+  } else {
+    console.log("Los botones no se muestran porque no hay estación seleccionada.");
+  }
+}
+
+// [O] Mostrar el spinner de carga
+function showLoadingSpinner() {
+  const spinner = document.getElementById('loadingMessagePRindex');
+  spinner.style.display = 'flex';
+  console.log("Spinner mostrado");
+}
+
+// [P] Ocultar el spinner de carga
+function hideLoadingSpinner() {
+  const spinner = document.getElementById('loadingMessagePRindex');
+  spinner.style.display = 'none';
+}
 */

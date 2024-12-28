@@ -1,57 +1,23 @@
-.primaryButton {
-  font: 900 2rem $fontFamilyText;
+.primaryBtn,
+.secondaryBtn {
   cursor: pointer;
-  padding: 1.2rem 2rem;
-  text-align: center;
-  background-color: $energicOrange;
-  display: inline-block;
-  color: $pureWhite;
-  border-radius: 1.2rem;
-  border: 2px solid $energicOrange;
-
-  &:hover {
-    background-color: $pureWhite;
-    color: $energicOrange;
-  }
-}
-
-.callToAction {
-  //display: none;
-  margin: 0 auto;
-  margin-top: 0.1rem;
-  margin-bottom: 1rem;
-  text-align: center;
-  border: 2px solid $energicOrange;
   border-radius: 12px;
   padding: 5px 20px;
-  width: 250px;
-  color: $spaceBlue;
-  font-size: clamp(1rem, 1.2vw, 2.4rem);
-  cursor: pointer;
+  font-size: 1.8rem;
+  display: none;
+}
 
-  &:hover,
-  &:active,
-  &:focus,
-  &.active-button {
-    background-color: $energicOrange;
-    color: $pureWhite;
+@media screen and (max-width: 620px) {
+  .primaryBtn,
+  .secondaryBtn {
+    font-size: 1.2rem;
   }
 }
 
-//.indexBtn {
-//margin-bottom: 1rem;
-//display: none;
-//}
-
-.selectBtn {
-  //margin-top: 1rem;
+.primaryBtn {
   border: 2px solid $spaceBlue;
-  border-radius: 12px;
-  padding: 5px 20px;
   min-width: 150px;
   color: $spaceBlue;
-  font-size: clamp(1rem, 1.2vw, 2.4rem);
-  cursor: pointer;
   white-space: nowrap;
 
   &:hover,
@@ -63,29 +29,26 @@
   }
 }
 
-@media screen and (max-width: 550px) {
-  .selectBtn {
+@media screen and (max-width: 620px) {
+  .primaryBtn {
     min-width: auto;
   }
 }
 
-.indexButtonDispalyed {
-  margin-top: 1rem;
-  //margin-bottom: 1rem;
-  //display: none;
-  border: 2px solid $spaceBlue;
-  border-radius: 12px;
-  padding: 5px 20px;
+.secondaryBtn {
+  border: 2px solid $energicOrange;
+  margin: 0 auto;
+  margin-top: 0.1rem;
+  margin-bottom: 1rem;
+  text-align: center;
   width: 250px;
   color: $spaceBlue;
-  font-size: clamp(1rem, 1.2vw, 2.4rem);
-  cursor: pointer;
 
   &:hover,
   &:active,
   &:focus,
   &.active-button {
-    background-color: $spaceBlue;
+    background-color: $energicOrange;
     color: $pureWhite;
   }
 }

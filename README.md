@@ -1,31 +1,29 @@
 # Install RT-WMIS PROJECT
 
+`git clone https://github.com/nmoncada93/RT-WMIS-WEB-PROJECT.git`
+`cd RT-WMIS-WEB-PROJECT`
+
+
 `npm install`
-`pip install -r requirements.txt`
 
-  ## Run Back-End:
+`python -m venv venv`
 
-  ### Windows
+  ## Windows
   `venv\Scripts\activate`
 
   `desactivate`
 
+  ## Mac/Linux
+  `source venv/bin/activate`
+
+`pip install -r requirements.txt`
+
+  ## Run Back-End:
   `cd backend`
   `python -m flask run`
 
-  ### Mac/Linux
-  `source venv/bin/activate`
-
-  ## Run Front-End:
-  `npm run dev`
 
   Ctrl + Shift + P --> select: Python: Select Interpreter
-
-# AWS
-
-`sudo lsof -i`
-
-`sudo kill -9 <PID>` Detiene procesos
 
 # UOC Boilerplate
 

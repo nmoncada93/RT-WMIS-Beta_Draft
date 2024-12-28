@@ -13,6 +13,7 @@
   background-color: inherit;
 }
 
+// INDEX REAL-TIME SPINNER CONTAINER
 #loadingMessageRTindex {
   display: flex;
   align-items: center;
@@ -21,6 +22,14 @@
   font-style: italic;
   font-size: $fontSizeH2;
   color: $spaceBlue;
+  margin-top: 40px;
+}
+
+// INDEX PAST RECORDS SPINNER CONTAINER
+#loadingMessagePRindex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
   font-style: italic;
   font-size: $fontSizeH2;
