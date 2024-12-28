@@ -12,7 +12,7 @@ let activeChart = null;  // Referencia global al gráfico activo
 
 // [D] Función para obtener los datos de sphi.tmp desde el backend
 async function fetchSphiData(year, doy) {
-  const url = `http://127.0.0.1:5000/indexPR/api/read-sphi/${year}/${doy}`;
+  const url = `http://127.0.0.1:5000/api/indexPR/read-sphi/${year}/${doy}`;
 
   try {
     const response = await fetch(url);
@@ -34,7 +34,7 @@ async function fetchSphiData(year, doy) {
 // [D1] Nueva función para obtener los datos de roti.tmp desde el backend
 async function fetchRotiData(year, doy) {
 
-  const url = `http://127.0.0.1:5000/indexPR/api/read-roti/${year}/${doy}`;
+  const url = `http://127.0.0.1:5000/api/indexPR/read-roti/${year}/${doy}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {

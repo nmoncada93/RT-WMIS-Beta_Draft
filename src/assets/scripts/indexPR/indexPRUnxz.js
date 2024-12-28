@@ -11,7 +11,7 @@ export function getSelectedDate(dateString) {
 
 // [B] Función para descomprimir los archivos en el backend
 export function decompressFiles(year, doy) {
-  const decompressUrl = `http://127.0.0.1:5000/indexPR/descomprimir-archivos/${year}/${doy}`;
+  const decompressUrl = `http://127.0.0.1:5000/api/indexPR/unxz-files/${year}/${doy}`;
   console.log("Requesting for unzip:", decompressUrl);
 
   return fetch(decompressUrl, { method: 'POST' })

@@ -1,6 +1,6 @@
 // [A] Funcion para obtener datos crudos del backend ---------------------------
 // [A.1] Fetch para SPHI
-async function fetchRawSphiData(file) {
+async function fetchRawSphiData() {
   if (isFetching.sphi) {
     console.warn("Solicitud SPHI en proceso. Evitando solapamiento.");
     return null; // Evita solicitudes simultáneas
@@ -8,7 +8,8 @@ async function fetchRawSphiData(file) {
 
   isFetching.sphi = true; // Activa el flag
   try {
-    const response = await fetch(`http://127.0.0.1:5000/mapsRT/get-json?file=${file}`);
+    //const response = await fetch(`http://127.0.0.1:5000/api/mapsRT/read-igp-sphi?file=${file}`);
+    const response = await fetch(`http://127.0.0.1:5000/api/mapsRT/read-igp-sphi`);
     if (!response.ok) {
       throw new Error(`Error HTTP para SPHI: ${response.status}`);
     }
@@ -19,7 +20,7 @@ async function fetchRawSphiData(file) {
 }
 
 // [A.2] Fetch para ROTI
-async function fetchRawRotiData(file) {
+async function fetchRawRotiData() {
   if (isFetching.roti) {
     console.warn("Solicitud ROTI en proceso. Evitando solapamiento.");
     return null; // Evita solicitudes simultáneas
@@ -27,7 +28,7 @@ async function fetchRawRotiData(file) {
 
   isFetching.roti = true; // Activa el flag
   try {
-    const response = await fetch(`http://127.0.0.1:5000/mapsRT/get-roti-json`);
+    const response = await fetch(`http://127.0.0.1:5000/api/mapsRT/read-igp-roti`);
     if (!response.ok) {
       throw new Error(`Error HTTP para ROTI: ${response.status}`);
     }
@@ -38,7 +39,7 @@ async function fetchRawRotiData(file) {
 }
 
 // [A.3] Fetch para S4
-async function fetchRawS4Data(file) {
+async function fetchRawS4Data() {
   if (isFetching.s4) {
     console.warn("Solicitud S4 en proceso. Evitando solapamiento.");
     return null; // Evita solicitudes simultáneas
@@ -46,7 +47,7 @@ async function fetchRawS4Data(file) {
 
   isFetching.s4 = true; // Activa el flag
   try {
-    const response = await fetch(`http://127.0.0.1:5000/mapsRT/get-roti-json`);
+    const response = await fetch(`http://127.0.0.1:5000/api/mapsRT/read-igp-roti`);
     if (!response.ok) {
       throw new Error(`Error HTTP para S4: ${response.status}`);
     }
@@ -134,9 +135,10 @@ function filterS4Data(rawData) {
 
 // [C] Funcion principal para obtener y procesar los datos --------------------
 // [C.1] Para SPHI
-export async function fetchIgpSphiData(file = "igp_sphi.dat") {
+//export async function fetchIgpSphiData(file = "igp_sphi.dat") {
+  export async function fetchIgpSphiData() {
   try {
-    const rawData = await fetchRawSphiData(file); // [C.1.1] Obtiene datos crudos
+    const rawData = await fetchRawSphiData(); // [C.1.1] Obtiene datos crudos
     if (!rawData) return null;
 
     return filterSphiData(rawData); // [C.1.2] Filtra datos para SPHI
@@ -146,9 +148,9 @@ export async function fetchIgpSphiData(file = "igp_sphi.dat") {
 }
 
 // [C.2] Para ROTI
-export async function fetchIgpRotiData(file = "igp_roti.dat") {
+export async function fetchIgpRotiData() {
   try {
-    const rawData = await fetchRawRotiData(file); // [C.2.1] Obtiene datos crudos
+    const rawData = await fetchRawRotiData(); // [C.2.1] Obtiene datos crudos
 
     //console.log("Contenido detallado de los datos crudos para ROTI:", rawData); // Agrega este console.log aquí.
 
@@ -162,9 +164,9 @@ export async function fetchIgpRotiData(file = "igp_roti.dat") {
 }
 
 // [C.3] Para S4
-export async function fetchIgpS4Data(file = "igp_roti.dat") {
+export async function fetchIgpS4Data() {
   try {
-    const rawData = await fetchRawS4Data(file); // [C.3.1] Obtiene datos crudos
+    const rawData = await fetchRawS4Data(); // [C.3.1] Obtiene datos crudos
     if (!rawData) return null;
 
     return filterS4Data(rawData); // [C.3.2] Filtra datos para S4

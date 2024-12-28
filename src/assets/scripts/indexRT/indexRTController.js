@@ -67,7 +67,7 @@ function stopPolling() {
 
 // [D] Función para cargar los datos desde el backend [sphi.tmp] ---------------
 function fetchSphiData() {
-  return fetch('http://127.0.0.1:5000/api/read-sphi')
+  return fetch('http://127.0.0.1:5000/api/indexRT/read-sphi')
       .then(response => response.json())
       .then(data => {
           allData = data.length ? data : [];
@@ -88,7 +88,7 @@ function fetchSphiData() {
 
 // [D.1] Función para cargar los datos desde el backend [roti.tmp], usada también para S4
 function fetchRotiData() {
-  return fetch('http://127.0.0.1:5000/api/read-roti')
+  return fetch('http://127.0.0.1:5000/api/indexRT/read-roti')
       .then(response => response.json())
       .then(data => {
           allData = data.length ? data : [];
