@@ -160,6 +160,7 @@ export function renderChart(data, station, index) {
 
 
 
+
 /*
 //FUNCIONAL Y PERFECTO
 //import * as echarts from 'echarts/types/dist/echarts';
