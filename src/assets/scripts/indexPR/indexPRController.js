@@ -183,7 +183,7 @@ document.getElementById("sphiIndexPRBtn").addEventListener("click", function () 
     // [1] Muestra el contenedor antes de renderizar
     document.getElementById("indexPRContainer").style.display = 'flex';
     renderChart(pastRecordsData.sphi, selectedStation, 'sphi');
-    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    //chartRendered = true;  // MARCAR COMO RENDERIZADO
     setActiveButton(this);
   } else {
     console.log("Selecciona una estación antes de generar el gráfico.");
@@ -196,7 +196,7 @@ document.getElementById("rotiIndexPRBtn").addEventListener("click", function () 
     activeIndex = 'roti';
     document.getElementById("indexPRContainer").style.display = 'flex';
     renderChart(pastRecordsData.roti, selectedStation, 'roti');
-    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    //chartRendered = true;  // MARCAR COMO RENDERIZADO
     setActiveButton(this);
   } else {
     console.log("Selecciona una estación antes de generar el gráfico.");
@@ -209,7 +209,7 @@ document.getElementById("s4IndexPRBtn").addEventListener("click", function () {
     activeIndex = 's4';
     document.getElementById("indexPRContainer").style.display = 'flex';
     renderChart(pastRecordsData.roti, selectedStation, 's4');
-    chartRendered = true;  // MARCAR COMO RENDERIZADO
+    //chartRendered = true;  // MARCAR COMO RENDERIZADO
     setActiveButton(this);
   } else {
     console.log("Selecciona una estación antes de generar el gráfico.");

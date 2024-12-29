@@ -1,305 +1,331 @@
-//import { getSelectedDate, processIndexData } from './indexPRUnxz.js';
-import { renderChart } from './indexRTChart.js';
+import { resetChart, updateRotiChart, updateS4Chart, updateSphiChart } from './indexRTChart.js';
 
-// [A] Variables Globales
-let realTimeData = {
-  sphi: null,  // Almacena el JSON de sphi.tmp
-  roti: null   // Almacena el JSON de roti.tmp
-};
-let activeIndex = null;  // Índice activo (sphi, roti)
-let selectedStation = ""; // Estación seleccionada
-let isFetching = false;
-let lastDataHash = null;  // Nuevo: Guarda el hash del último conjunto de datos
-let fetchInterval = null;
 
-// [B] Función para obtener los datos de sphi.tmp desde el backend
-async function fetchSphiData() {
-  const url = `http://127.0.0.1:5000/api/indexRT/read-sphi`;
-  console.time("fetchSphiData");  // Inicia el cronómetro
+// [A] Variables Globales -------------------------------------------
+let allData = [];
+let pollingInterval = null;
+let chartDom = document.getElementById('chart');
+let closeButton = document.getElementById('closeChartButton');
+let stationSelector = document.getElementById('stationSelector');
+let activeIndex = null; // [A.1] Nueva variable para almacenar el índice seleccionado (SPHI, ROTI, S4)´
+// Controlador para cancelar peticiones fetch activas
+let abortController = null; // [A.3] Nueva variable para manejar el AbortController
+// Seleccionamos el elemento del mensaje de carga
+const loadingMessageRTindex = document.getElementById('loadingMessageRTindex');
 
-  //handlerSpinner(true);
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Error obtaining sphi.tmp for selected date");
-    }
+// [A.2] Inicialización del Gráfico y Ocultación de Botón
+chartDom.style.display = 'none';
+closeButton.style.display = 'none';
+//---------------------------------------------------------------
 
-    const data = await response.json();
-    realTimeData.sphi = data;
-    console.log("Data from sphi.tmp obtained and stored");
-    updateStationSelector(data);
-    console.log("Actualizando selector de estaciones desde Fetch de SPHI");
-    console.timeEnd("fetchSphiData");  // Finaliza el cronómetro
-    showIndexButtons();
-
-    return data;
+// [B] Función para iniciar el polling ------------------------------
+function startPolling(station) {
+  // Detener cualquier polling existente antes de iniciar uno nuevo
+  if (pollingInterval !== null) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
   }
 
-  catch (error) {
-    console.error("Error during sphi.tmp request:", error);
-    handleNoData("No data available for the selected date. Please try again later or choose another date!");
+  // Cancelar cualquier fetch en curso antes de iniciar uno nuevo
+  if (abortController) {
+      abortController.abort(); // Cancela la solicitud fetch activa
   }
+
+  // Crear un nuevo controlador de abortos para la nueva solicitud
+  abortController = new AbortController();
+
+  // Condicional para manejar múltiples índices de datos según activeIndex
+  const fetchFunction = activeIndex === 'roti' || activeIndex === 's4' ? fetchRotiData : fetchSphiData;
+  const updateFunction = activeIndex === 'roti' ? updateRotiChart : activeIndex === 's4' ? updateS4Chart : updateSphiChart;
+
+  // Iniciar el polling con un intervalo seguro y controlado
+  pollingInterval = setInterval(() => {
+      fetchFunction(abortController.signal) // Pasar la señal de abort a fetchFunction
+          .then(data => updateFunction(data, station))
+          .catch(error => {
+              if (error.name === 'AbortError') {
+                  console.log('Fetch cancelado debido a un cambio de índice o estación.');
+              } else {
+                  console.error('Error en el polling:', error);
+              }
+          });
+  }, 10000); // Cada 10 segundos
 }
 
-// [C] Nueva función para obtener los datos de roti.tmp desde el backend
-async function fetchRotiData() {
-
-  const url = `http://127.0.0.1:5000/api/indexRT/read-roti`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Error obtaining roti.tmp for selected date");
-    }
-
-    const data = await response.json();
-    realTimeData.roti = data;
-    console.log("Data from roti.tmp obtained and stored");
-
-    return data;
-  }
-
-  catch (error) {
-    console.error("Error during roti.tmp request:", error);
-    handleNoData("No data available for the selected date. Please try again later or choose another date!");
+// [C] Función para detener el polling ------------------------------
+function stopPolling() {
+  if (pollingInterval !== null) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
   }
 }
+//---------------------------------------------------------------
 
-// [D] Función para detectar la estación seleccionada
-function detectSelectedStation() {
-  const stationSelector = document.getElementById("stationSelector");
-  selectedStation = stationSelector.value;
-  console.log("Estación seleccionada:", selectedStation);
+// [D] Función para cargar los datos desde el backend [sphi.tmp] ---------------
+function fetchSphiData() {
+  return fetch('http://127.0.0.1:5000/api/indexRT/read-sphi')
+      .then(response => response.json())
+      .then(data => {
+          allData = data.length ? data : [];
+          const availableStations = allData.map(item => item[1]);
+          updateStationSelector(availableStations); // Llama a [F] Actualiza el selector
+          return allData;
+      })
+      .catch(error => {
+        if (error.name === 'AbortError') {
+            console.log('Solicitud fetch de SPHI cancelada.');
+        } else {
+            console.error('Error al obtener los datos:', error);
+            allData = [];
+        }
+        return allData;
+      });
 }
 
-// [E] Función para actualizar estaciones en el selector
-function updateStationSelector(data) {
-  const stationSelector = document.getElementById("stationSelector");
-  const availableStations = new Set(data.map(item => item[1]));
+// [D.1] Función para cargar los datos desde el backend [roti.tmp], usada también para S4
+function fetchRotiData() {
+  return fetch('http://127.0.0.1:5000/api/indexRT/read-roti')
+      .then(response => response.json())
+      .then(data => {
+          allData = data.length ? data : [];
+          const availableStations = allData.map(item => item[1]);
+          //updateStationSelector(availableStations); // Llama a [F] para actualizar el selector
+          return allData;
+      })
+      .catch(error => {
+        if (error.name === 'AbortError') {
+            console.log('Solicitud fetch de ROTI cancelada.');
+        } else {
+            console.error('Error al obtener los datos de roti.tmp:', error);
+            allData = [];
+            updateStationSelector([]); // Desactiva todas las estaciones en caso de error
+        }
+        return allData;
+      });
 
-  // Iterar solo si hay cambios
+}
+
+
+// [F] Función para actualizar el estado de las estaciones en el selector ---
+function updateStationSelector(availableStations) {
   Array.from(stationSelector.options).forEach(option => {
-    const stationCode = option.value;
-    if (option.disabled !== !availableStations.has(stationCode)) {
-      option.disabled = !availableStations.has(stationCode);
-      option.classList.toggle('no-data', !availableStations.has(stationCode));
-    }
-  });
-
-}
-
-// [F] Función para marcar el botón activo y desactivar el resto
-function setActiveButton(button) {
-  const buttons = document.querySelectorAll(".primaryRTBtn");
-  buttons.forEach(btn => btn.classList.remove("active-button"));
-  button.classList.add("active-button");
-}
-
-// [G] Función para mostrar botones de índice solo si hay estación seleccionada
-function showIndexButtons() {
-  const buttons = document.querySelectorAll('.primaryRTBtn');
-
-  if (selectedStation && (realTimeData.sphi || realTimeData.roti)) {
-    buttons.forEach(btn => {
-      btn.style.display = 'inline-block';
-    });
-  }
-}
-
-// [Q] Función para ocultar y desactivar botones de índice
-function hideIndexButtons() {
-  const buttons = document.querySelectorAll('.primaryRTBtn');
-
-  buttons.forEach(btn => {
-    btn.style.display = 'none';
-  });
-}
-
-
-// [H] Función para verificar y actualizar datos si han cambiado
-async function checkAndUpdateData() {
-  if (isFetching) return;
-  isFetching = true;
-
-  let newData;
-
-  // Realiza el fetch dependiendo del índice activo
-  if (activeIndex === 'sphi') {
-    newData = await fetchSphiData();
-  } else if (activeIndex === 'roti' || activeIndex === 's4') {
-    newData = await fetchRotiData();
-  } else {
-    console.log("No active index to fetch data.");
-    isFetching = false;
-    return;
-  }
-
-  // Si hay datos nuevos, calcula el hash y compara
-  if (newData && newData.length > 0) {
-    const newHash = JSON.stringify(newData);
-
-    if (lastDataHash !== newHash) {
-      // Actualiza la data correspondiente
-      if (activeIndex === 'sphi') {
-        realTimeData.sphi = newData;
+      //const stationCode = option.value.split('_')[0];
+      const stationCode = option.value;
+      if (!availableStations.includes(stationCode)) {
+          option.style.color = 'red';
+          option.style.pointerEvents = 'none';
+          option.disabled = true;
       } else {
-        realTimeData.roti = newData;
+          option.style.color = '';
+          option.style.pointerEvents = '';
+          option.disabled = false;
       }
+  });
+}
 
-      lastDataHash = newHash;  // Guarda el nuevo hash
-      console.log("Data updated - Changes detected.");
 
-      // Re-renderiza el gráfico automáticamente si hay datos nuevos
-      if (selectedStation) {
-        console.log("Re-renderizando gráfico con datos actualizados...");
-        renderChart(newData, selectedStation, activeIndex);
-      }
-    } else {
-      console.log("Data is up to date.");
+// [G] Evento para desplegar el selector y verificar los datos actualizados
+stationSelector.addEventListener('focus', () => {
+  const defaultOption = stationSelector.querySelector('option');
+  defaultOption.textContent = 'Loading Stations...';
+  defaultOption.classList.add('loading-text');
+
+  stationSelector.classList.add('station-loading'); // Bloquea la interacción
+
+  fetchSphiData()
+    .then(data => {
+      allData = data;
+      const availableStations = allData.map(item => item[1]);
+      updateStationSelector(availableStations);
+      defaultOption.textContent = 'Scroll down to select station';
+      defaultOption.classList.remove('loading-text');
+
+      stationSelector.classList.remove('station-loading'); // Desbloquea la interacción
+    })
+    .catch(error => {
+      console.error('Error al cargar estaciones:', error);
+      defaultOption.textContent = 'Error: Signal lost...';
+      defaultOption.classList.remove('loading-text');
+
+      stationSelector.classList.remove('station-loading'); // Desbloquea la interacción en caso de error
+    });
+});
+
+
+// [H] Listener para el cambio de estación en el selector --------------------
+stationSelector.addEventListener('change', function () {
+
+  resetChart(); // Limpia el gráfico antes de la actualización
+    // Muestra el mensaje de carga solo si ya hay un índice activo
+    if (activeIndex !== null) {
+      loadingMessageRTindex.style.display = 'flex';
     }
+
+  // Mostrar los botones de índice solo si hay una estación seleccionada
+  if (stationSelector.value !== "") { // Si hay una estación seleccionada
+    sphiButton.style.display = 'inline-block';
+    rotiButton.style.display = 'inline-block';
+    s4Button.style.display = 'inline-block';
   }
 
-  isFetching = false;
-}
+  const selectedStation = this.value;
+  //const selectedStation = this.value.split('_')[0];
+  if (!selectedStation) return;
+  stopPolling();
 
-// [N] Función para iniciar el fetch automático cada 10 segundos
-function startAutoFetch() {
-  if (!fetchInterval) {
-    fetchInterval = setInterval(checkAndUpdateData, 10000);  // Cada 10 segundos
-    console.log("Auto fetch started...");
-  }
-}
-
-// [O] Función para detener autofetch
-function stopAutoFetch() {
-  if (fetchInterval) {
-    clearInterval(fetchInterval);
-    fetchInterval = null;
-    console.log("Auto fetch stopped.");
-  }
-}
-
-// [P] Función para cerrar el gráfico y detener el fetch automático
-function closeChart() {
-  const chartContainer = document.getElementById("indexRTContainer");
-  const stationSelector = document.getElementById("stationSelector");  // Selector de estaciones
-
-  // [1] Ocultar el contenedor del gráfico
-  chartContainer.style.display = 'none';
-
-  // [2] Detener el fetch automático
-  stopAutoFetch();
-
-  // [3] Resetear variables globales (opcional)
-  activeIndex = null;
-  realTimeData.sphi = null;
-  realTimeData.roti = null;
-  selectedStation = "";  // Resetear estación seleccionada
-  console.log("Chart closed and fetch stopped.");
-
-  // [4] Ocultar botones de índice
-  hideIndexButtons();
-
-  // [5] Resetear selector de estaciones al valor por defecto
-  stationSelector.selectedIndex = 0;
-}
-
-
-
-//=======================================================================================
-//==============================  LISTENERS =============================================
-//=======================================================================================
-
-// [I] Preload al Cargar la Página
-window.onload = function () {
-  console.log("Fetching station data on page load...");
-  fetchSphiData();
-  fetchRotiData();
-};
-
-// [J] Evento para capturar la estación y renderizar automáticamente si hay índice activo
-document.getElementById("stationSelector").addEventListener("change", function () {
-  detectSelectedStation();
-  showIndexButtons();
-  if (activeIndex) {
-    const dataToRender = activeIndex === 's4' ? realTimeData['roti'] : realTimeData[activeIndex];
-    if (dataToRender) {
-      console.log ("[I] Intentando renderizar");
-      renderChart(dataToRender, selectedStation, activeIndex);
-    }
-  }
-});
-
-// [K1] Render Chart for SPHI Index
-document.getElementById("sphiButton").addEventListener("click", function () {
-  stopAutoFetch();
-  if (realTimeData.sphi && selectedStation) {
-    activeIndex = 'sphi';
-    document.getElementById("indexRTContainer").style.display = 'flex';
-    renderChart(realTimeData.sphi, selectedStation, 'sphi');
-    setActiveButton(this);
-    startAutoFetch();  // Iniciar fetch automático
-    document.getElementById("closeChartButton").style.display = 'inline-block';
+  // [H.1] Verifica el índice activo y actualiza el gráfico y polling correspondiente
+  if (activeIndex === 'sphi') {
+      updateSphiChart(allData, selectedStation);
+      startPolling(selectedStation);
+  } else if (activeIndex === 'roti') {
+      fetchRotiData()
+          .then(data => {
+              updateRotiChart(data, selectedStation);
+              startPolling(selectedStation);
+          })
+          .catch(error => console.error('Error en el polling para ROTI:', error));
+  } else if (activeIndex === 's4') {
+      fetchRotiData()
+          .then(data => {
+              updateS4Chart(data, selectedStation); // Llama a la función específica para S4
+              startPolling(selectedStation);
+          })
+          .catch(error => console.error('Error en el polling para S4:', error));
   } else {
-    console.log("Selecciona una estación antes de generar el gráfico.");
+      chartDom.style.display = 'none'; // Oculta el gráfico si no hay índice seleccionado
+      closeButton.style.display = 'none';
   }
 });
+//---------------------------------------------------------------
 
-// [K2] Render Chart for ROTI Index
-document.getElementById("rotiButton").addEventListener("click", function () {
-  stopAutoFetch();
-  if (realTimeData.roti && selectedStation) {
-    activeIndex = 'roti';
-    document.getElementById("indexRTContainer").style.display = 'flex';
-    renderChart(realTimeData.roti, selectedStation, 'roti');
-    //chartRendered = true;  // MARCAR COMO RENDERIZADO
-    setActiveButton(this); //pasa el boton clicado como argumento a la función
-    startAutoFetch();  // Iniciar fetch automático
-    document.getElementById("closeChartButton").style.display = 'inline-block';
-  } else {
-    console.log("Selecciona una estación antes de generar el gráfico.");
-  }
+// [I] Listener para el botón de SPHI ---------------------------------------
+document.getElementById('sphiButton').addEventListener('click', function () {
+  // Deshabilita los botones de índice durante el renderizado
+  document.getElementById('sphiButton').disabled = true;
+  document.getElementById('s4Button').disabled = true;
+  document.getElementById('rotiButton').disabled = true;
+
+  resetChart(); // Limpia el gráfico antes de la actualización
+  loadingMessageRTindex.style.display = 'flex'; // Muestra el mensaje de carga
+  //const selectedStation = stationSelector.value.split('_')[0];
+  const selectedStation = stationSelector.value;
+  if (!selectedStation) return;
+
+  activeIndex = 'sphi'; // Almacena el índice activo
+  stopPolling();
+  updateSphiChart(allData, selectedStation);
+
+  // Vuelve a habilitar los botones una vez completado el renderizado
+  startPolling(selectedStation);
+  document.getElementById('sphiButton').disabled = false;
+  document.getElementById('s4Button').disabled = false;
+  document.getElementById('rotiButton').disabled = false;
+
+  // [I.1] Aplicar la clase "active-button" solo al botón SPHI
+  document.getElementById('sphiButton').classList.add('active-button');
+  document.getElementById('s4Button').classList.remove('active-button');
+  document.getElementById('rotiButton').classList.remove('active-button');
 });
 
-// [K3] Render Chart for S4 Index
-document.getElementById("s4Button").addEventListener("click", function () {
-  stopAutoFetch();
-  if (realTimeData.roti && selectedStation) {
-    activeIndex = 's4';
-    document.getElementById("indexRTContainer").style.display = 'flex';
-    renderChart(realTimeData.roti, selectedStation, 's4');
-    //chartRendered = true;  // MARCAR COMO RENDERIZADO
-    setActiveButton(this);
-    startAutoFetch();  // Iniciar fetch automático
-    document.getElementById("closeChartButton").style.display = 'inline-block';
-  } else {
-    console.log("Selecciona una estación antes de generar el gráfico.");
-  }
+//---------------------------------------------------------------
+
+// [I.1] Listener para el botón de ROTI --------------------------------------
+document.getElementById('rotiButton').addEventListener('click', function () {
+  // Deshabilita los botones de índice durante el renderizado
+  document.getElementById('sphiButton').disabled = true;
+  document.getElementById('s4Button').disabled = true;
+  document.getElementById('rotiButton').disabled = true;
+
+  resetChart(); // Limpia el gráfico antes de la actualización
+  loadingMessageRTindex.style.display = 'flex'; // Muestra el mensaje de carga
+  //const selectedStation = stationSelector.value.split('_')[0];
+  const selectedStation = stationSelector.value;
+  if (!selectedStation) return;
+
+  activeIndex = 'roti'; // Establece el índice activo a ROTI
+  stopPolling();
+  fetchRotiData()
+      .then(data => {
+          updateRotiChart(data, selectedStation); // Llama a la función específica para ROTI
+          startPolling(selectedStation); // Inicia polling para ROTI
+
+          // Habilita los botones de nuevo al finalizar el renderizado
+          document.getElementById('sphiButton').disabled = false;
+          document.getElementById('s4Button').disabled = false;
+          document.getElementById('rotiButton').disabled = false;
+      })
+      .catch(error => console.error('Error al actualizar el gráfico ROTI:', error));
+
+  // [I.1.1] Aplicar la clase "active-button" solo al botón ROTI
+  document.getElementById('rotiButton').classList.add('active-button');
+  document.getElementById('sphiButton').classList.remove('active-button');
+  document.getElementById('s4Button').classList.remove('active-button');
 });
 
-// [L] Evento para ejecutar el fetch solo si es necesario
-document.getElementById("stationSelector").addEventListener("focus", async function () {
-  console.log("Verificando si se necesita actualizar estaciones...");
-  await checkAndUpdateData();  // Llama a la función de verificación antes de abrir el selector
+//---------------------------------------------------------------
+
+// [I.2] Listener para el botón de S4 ---------------------------------------
+document.getElementById('s4Button').addEventListener('click', function () {
+  // Deshabilita los botones de índice durante el renderizado
+  document.getElementById('sphiButton').disabled = true;
+  document.getElementById('rotiButton').disabled = true;
+  document.getElementById('s4Button').disabled = true;
+
+  resetChart(); // Limpia el gráfico antes de la actualización
+  loadingMessageRTindex.style.display = 'block'; // Muestra el mensaje de carga
+  //const selectedStation = stationSelector.value.split('_')[0];
+  const selectedStation = stationSelector.value;
+  if (!selectedStation) return;
+
+  activeIndex = 's4'; // Establece el índice activo a S4
+  stopPolling();
+  fetchRotiData()
+      .then(data => {
+          updateS4Chart(data, selectedStation); // Llama a la función específica para S4
+          startPolling(selectedStation); // Inicia polling para S4
+
+          // Habilita los botones de nuevo al finalizar el renderizado
+          document.getElementById('sphiButton').disabled = false;
+          document.getElementById('rotiButton').disabled = false;
+          document.getElementById('s4Button').disabled = false;
+      })
+      .catch(error => console.error('Error al actualizar el gráfico S4:', error));
+
+  // [I.2.1] Aplicar la clase "active-button" solo al botón S4
+  document.getElementById('s4Button').classList.add('active-button');
+  document.getElementById('sphiButton').classList.remove('active-button');
+  document.getElementById('rotiButton').classList.remove('active-button');
+});
+
+//---------------------------------------------------------------
+
+// [J] Listener para cerrar el gráfico ---------------------------------------
+closeButton.addEventListener('click', () => {
+  stopPolling();
+  closeButton.style.display = 'none';
+
+  const chartRTContainer = document.getElementById("indexRTContainer");
+  chartRTContainer.style.display = "none";
+
+  stationSelector.value = "";
+  activeIndex = null; // Reinicia el índice activo al cerrar
+
+  // [J.1] Quitar la clase "active-button" de todos los botones
+  document.getElementById('sphiButton').classList.remove('active-button');
+  document.getElementById('s4Button').classList.remove('active-button');
+  document.getElementById('rotiButton').classList.remove('active-button');
+
+  // [J.2] Ocultar los botones de índice al cerrar el gráfico
+  document.getElementById('sphiButton').style.display = 'none';
+  document.getElementById('s4Button').style.display = 'none';
+  document.getElementById('rotiButton').style.display = 'none';
 });
 
 
-// [Q] Listener para el botón RESET
-document.getElementById("closeChartButton").addEventListener("click", function () {
-  closeChart();
-  this.style.display = 'none';  // Ocultar el botón RESET después de cerrar el gráfico
-});
 
-
-
-
-/*
-setInterval(() => {
-  fetchSphiData();
-  fetchRotiData();
-  console.log("Fetch automático ejecutado cada 10 segundos");
-}, 5000);  // 10 segundos
-*/
+// [K] Detener el polling al salir de la página -----------------------------
+window.addEventListener('beforeunload', stopPolling);
 
 
 /*

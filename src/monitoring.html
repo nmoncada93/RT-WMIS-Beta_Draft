@@ -174,11 +174,22 @@
                         </select>
 
                         <div class="btnsContainer">
-                            <button id="s4Button" class="primaryBtn">S4</button>
-                            <button id="rotiButton" class="primaryBtn">
+                            <button
+                                id="s4Button"
+                                class="primaryBtn primaryRTBtn"
+                            >
+                                S4
+                            </button>
+                            <button
+                                id="rotiButton"
+                                class="primaryBtn primaryRTBtn"
+                            >
                                 ROTI L1
                             </button>
-                            <button id="sphiButton" class="primaryBtn">
+                            <button
+                                id="sphiButton"
+                                class="primaryBtn primaryRTBtn"
+                            >
                                 SigmaPhi
                             </button>
                         </div>
@@ -193,7 +204,9 @@
 
                     <div class="chartContainer" id="indexRTContainer">
                         <div class="chartIndex" id="chart"></div>
+                        <!--div class="chartIndex" id="chart"></!--div-->
                     </div>
+
                     <button
                         class="secondaryBtn"
                         id="closeChartButton"
@@ -460,7 +473,7 @@
             src="./assets/scripts/mapsRT/mapRTProjectionS4.js"
         ></script>
 
-        <!------------------------SCRIPTS PAST RECORDS MAPS (sphi)----------------------------------------->
+        <!------------------------SCRIPTS PAST RECORDS INDEX ----------------------------------------->
         <script
             type="module"
             src="./assets/scripts/indexPR/indexPRController.js"
