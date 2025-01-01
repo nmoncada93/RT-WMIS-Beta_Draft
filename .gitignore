@@ -1,28 +1,29 @@
-# backend/venv/
-# backend/__pycache__/
-# backend/ReadmeAWS.md
+backend/venv
+backend/__pycache__
+backend/upc_tmp/ReadmeAWS.md
+backend/upc_tmp/testing
 
-#backend/upc_tmp/2024/2024182
-#backend/upc_tmp/2024/2024183
-#backend/upc_tmp/2024/2024184
-#backend/upc_tmp/2024/2024185
-#backend/upc_tmp/2024/2024186
-#backend/upc_tmp/2024/2024187
-#backend/upc_tmp/2024/2024188
-#backend/upc_tmp/2024/2024189
+backend/upc_tmp/2024/2024182
+backend/upc_tmp/2024/2024183
+backend/upc_tmp/2024/2024184
+backend/upc_tmp/2024/2024185
+backend/upc_tmp/2024/2024186
+backend/upc_tmp/2024/2024187
+backend/upc_tmp/2024/2024188
+backend/upc_tmp/2024/2024189
 #__pycache__/
-/backend
+# /backend
 
-/requirements.txt
+# /requirements.txt
 
 
 
 # Ignorar todo el contenido de backend/upc_tmp
-/backend/upc_tmp/*
+# /backend/upc_tmp/*
 
 # ¡Excepto los archivos específicos!
-!/backend/upc_tmp/igp_sphi.dat
-!/backend/upc_tmp/sphi.tmp
+# !/backend/upc_tmp/igp_sphi.dat
+# !/backend/upc_tmp/sphi.tmp
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/git,sass,node,macos,linux,windows,vscode,sublimetext
