@@ -52,3 +52,22 @@
     color: $pureWhite;
   }
 }
+
+/*
+#stationSelector option:not([disabled]) {
+  color: red;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+*/
+
+//#stationSelector .selectOption--disabled {
+//color: #ffffff;
+//}
+
+/* Desactiva clic y hover para opciones deshabilitadas */
+.selectOption--disabled {
+  color: red;
+  pointer-events: none; /* Evita cualquier interacción */
+  cursor: not-allowed; /* Muestra un icono de prohibido */
+}

@@ -12,10 +12,15 @@ let isFetching = false;
 let lastDataHash = null;  // Nuevo: Guarda el hash del último conjunto de datos
 let fetchInterval = null;
 
+
 // [B] Función para obtener los datos de sphi.tmp desde el backend
 async function fetchSphiData() {
   const url = `http://127.0.0.1:5000/api/indexRT/read-sphi`;
-  console.time("fetchSphiData");  // Inicia el cronómetro
+  //console.time("fetchSphiData");  // Inicia el cronómetro
+  console.log("Fetch Request Enviada a Sphi");
+
+  // Mostrar texto de carga
+  toggleLoadingText(true);
 
   //handlerSpinner(true);
 
@@ -30,8 +35,11 @@ async function fetchSphiData() {
     console.log("Data from sphi.tmp obtained and stored");
     updateStationSelector(data);
     console.log("Actualizando selector de estaciones desde Fetch de SPHI");
-    console.timeEnd("fetchSphiData");  // Finaliza el cronómetro
-    showIndexButtons();
+    //console.timeEnd("fetchSphiData");  // Finaliza el cronómetro
+    //showIndexButtons();
+    // Rehabilitar el selector aunque haya error
+    //stationSelector.disabled = false;
+    toggleLoadingText(false);
 
     return data;
   }
@@ -39,6 +47,9 @@ async function fetchSphiData() {
   catch (error) {
     console.error("Error during sphi.tmp request:", error);
     handleNoData("No data available for the selected date. Please try again later or choose another date!");
+
+
+
   }
 }
 
@@ -56,6 +67,7 @@ async function fetchRotiData() {
     realTimeData.roti = data;
     console.log("Data from roti.tmp obtained and stored");
 
+    showIndexButtons();
     return data;
   }
 
@@ -75,18 +87,19 @@ function detectSelectedStation() {
 // [E] Función para actualizar estaciones en el selector
 function updateStationSelector(data) {
   const stationSelector = document.getElementById("stationSelector");
-  const availableStations = new Set(data.map(item => item[1]));
+  const availableStations = data.map(item => item[1]);  // Lista de estaciones disponibles
 
-  // Iterar solo si hay cambios
   Array.from(stationSelector.options).forEach(option => {
-    const stationCode = option.value;
-    if (option.disabled !== !availableStations.has(stationCode)) {
-      option.disabled = !availableStations.has(stationCode);
-      option.classList.toggle('no-data', !availableStations.has(stationCode));
-    }
-  });
+    const isAvailable = availableStations.includes(option.value);  // Verifica con includes
+    option.disabled = !isAvailable;
+    option.classList.toggle('selectOption--disabled', !isAvailable);
 
+    // CAMBIO DE COLOR DINÁMICO
+    option.style.color = isAvailable ? 'white' : 'red';
+  });
 }
+
+
 
 // [F] Función para marcar el botón activo y desactivar el resto
 function setActiveButton(button) {
@@ -95,24 +108,29 @@ function setActiveButton(button) {
   button.classList.add("active-button");
 }
 
-// [G] Función para mostrar botones de índice solo si hay estación seleccionada
+
+// [G] Función para mostrar botones de índice solo si hay estación seleccionada y datos cargados
 function showIndexButtons() {
   const buttons = document.querySelectorAll('.primaryRTBtn');
+  const s4Button = document.getElementById("s4Button");
+  const rotiButton = document.getElementById("rotiButton");
 
-  if (selectedStation && (realTimeData.sphi || realTimeData.roti)) {
+  if (selectedStation) {
+    // Mostrar SPHI solo si sphi.tmp está cargado
     buttons.forEach(btn => {
-      btn.style.display = 'inline-block';
+      if (btn.id === "sphiButton") {
+        btn.style.display = realTimeData.sphi ? 'inline-block' : 'none';
+      }
+
+
     });
+
+    // Mostrar S4 y ROTI solo si roti.tmp está cargado
+    const showRotiButtons = realTimeData.roti ? 'inline-block' : 'none';
+    s4Button.style.display = showRotiButtons;
+    rotiButton.style.display = showRotiButtons;
+
   }
-}
-
-// [Q] Función para ocultar y desactivar botones de índice
-function hideIndexButtons() {
-  const buttons = document.querySelectorAll('.primaryRTBtn');
-
-  buttons.forEach(btn => {
-    btn.style.display = 'none';
-  });
 }
 
 
@@ -179,6 +197,54 @@ function stopAutoFetch() {
   }
 }
 
+// [X] Función para mostrar/ocultar texto de carga en el selector
+function toggleLoadingText(isLoading) {
+  const stationSelector = document.getElementById("stationSelector");
+  const defaultOption = stationSelector.querySelector('.selectOption--disabled');
+
+  if (isLoading) {
+    defaultOption.textContent = "Loading stations...";
+  } else {
+    defaultOption.textContent = "Scroll down to select station";
+  }
+}
+
+// [X] Función para mostrar/ocultar el botón Reset
+function toggleResetButton(show) {
+  const resetButton = document.getElementById("closeChartButton");
+  resetButton.style.display = show ? 'inline-block' : 'none';
+}
+
+// [P] Función de Reset: Detener fetch y ocultar gráfico
+function resetChart() {
+  stopAutoFetch();  // Detener fetch automático
+
+  const chartContainer = document.getElementById("indexRTContainer");
+  if (chartContainer) {
+    chartContainer.style.display = 'none';
+    console.log("RESET: Fetch detenido y gráfico oculto.");
+  } else {
+    console.warn("El contenedor del gráfico no existe.");
+  }
+
+  // [1] Resetear el selector de estaciones
+  const stationSelector = document.getElementById("stationSelector");
+  stationSelector.selectedIndex = 0;
+
+  // [2] Ocultar botones de índice (SigmaPhi, ROTI, S4)
+  const indexButtons = document.querySelectorAll('.primaryRTBtn');
+  indexButtons.forEach(btn => {
+    btn.style.display = 'none';
+    btn.classList.remove('active-button');  // Eliminar estado activo
+  });
+
+}
+
+
+
+
+
+/*
 // [P] Función para cerrar el gráfico y detener el fetch automático
 function closeChart() {
   const chartContainer = document.getElementById("indexRTContainer");
@@ -204,18 +270,36 @@ function closeChart() {
   stationSelector.selectedIndex = 0;
 }
 
+*/
+
+/*
+// [Q] Función para ocultar y desactivar botones de índice
+function hideIndexButtons() {
+  const buttons = document.querySelectorAll('.primaryBtn');
+
+
+
+
+  buttons.forEach(btn => {
+    btn.style.display = 'none';
+    btn.classList.remove('active-button');   // Elimina el estado activo
+  });
+}
+*/
 
 
 //=======================================================================================
 //==============================  LISTENERS =============================================
 //=======================================================================================
 
+/*
 // [I] Preload al Cargar la Página
 window.onload = function () {
   console.log("Fetching station data on page load...");
   fetchSphiData();
-  fetchRotiData();
+  //fetchRotiData();
 };
+*/
 
 // [J] Evento para capturar la estación y renderizar automáticamente si hay índice activo
 document.getElementById("stationSelector").addEventListener("change", function () {
@@ -225,7 +309,9 @@ document.getElementById("stationSelector").addEventListener("change", function (
     const dataToRender = activeIndex === 's4' ? realTimeData['roti'] : realTimeData[activeIndex];
     if (dataToRender) {
       console.log ("[I] Intentando renderizar");
+
       renderChart(dataToRender, selectedStation, activeIndex);
+      toggleResetButton(true);
     }
   }
 });
@@ -277,19 +363,110 @@ document.getElementById("s4Button").addEventListener("click", function () {
   }
 });
 
+// [L] Evento para ejecutar el fetch
+document.getElementById("stationSelector").addEventListener("focus", function () {
+  console.log("Evento FOCUS del selector de estaciones");
+  fetchSphiData();
+  fetchRotiData();
+});
+
+const resetButton = document.getElementById("closeChartButton");
+if (resetButton) {
+  resetButton.addEventListener("click", function () {
+    resetChart();
+    toggleResetButton(false);
+  });
+} else {
+  console.warn("El botón de reset no existe en el DOM.");
+}
+
+
+/*
+// Evento que intercepta la seleccion de estaciones con teclado que ya están en rojo.
+document.getElementById("stationSelector").addEventListener("keydown", function(event) {
+  const stationSelector = event.target;
+  const options = Array.from(stationSelector.options);
+  let currentIndex = stationSelector.selectedIndex;
+
+  // Detectar teclas de flecha arriba y abajo
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    let nextIndex = currentIndex;
+
+    // Incrementa o disminuye dependiendo de la tecla
+    if (event.key === "ArrowDown") {
+      nextIndex++;
+    } else if (event.key === "ArrowUp") {
+      nextIndex--;
+    }
+
+    // Saltar opciones deshabilitadas
+    while (options[nextIndex] && options[nextIndex].disabled) {
+      nextIndex += (event.key === "ArrowDown") ? 1 : -1;
+    }
+
+    // Si hay una opción válida, selecciónala
+    if (options[nextIndex] && !options[nextIndex].disabled) {
+      stationSelector.selectedIndex = nextIndex;
+    }
+
+    // Evita que el selector quede en una opción deshabilitada
+    event.preventDefault();
+  }
+});
+*/
+
+/*
+// [L] Evento para ejecutar el fetch solo si es necesario
+["focus", "click"].forEach(event =>
+  document.getElementById("stationSelector").addEventListener(event, function () {
+    console.log("Evento de Click y Focus en selector de estaciones..");
+    fetchSphiData();
+    fetchRotiData();
+    //checkAndUpdateData();  // Llamada directa, no bloquea el evento
+  })
+);
+*/
+
+/*
+// [L] Evento para ejecutar el fetch solo si es necesario
+["focus", "click"].forEach(event =>
+  document.getElementById("stationSelector").addEventListener(event, async function () {
+    console.log("Verificando si se necesita actualizar estaciones...");
+    await checkAndUpdateData();
+  })
+);
+*/
+
+/*
+// [L] Evento para ejecutar el fetch solo si es necesario
+["focus", "click"].forEach(event =>
+  document.getElementById("stationSelector").addEventListener(event, async function () {
+    console.log("Forzando fetch de datos...");
+
+    // Realiza el fetch directo sin comprobaciones
+    await fetchSphiData();
+    await fetchRotiData();
+  })
+);
+*/
+
+
+
+/*
 // [L] Evento para ejecutar el fetch solo si es necesario
 document.getElementById("stationSelector").addEventListener("focus", async function () {
   console.log("Verificando si se necesita actualizar estaciones...");
   await checkAndUpdateData();  // Llama a la función de verificación antes de abrir el selector
 });
+*/
 
-
+/*
 // [Q] Listener para el botón RESET
 document.getElementById("closeChartButton").addEventListener("click", function () {
   closeChart();
   this.style.display = 'none';  // Ocultar el botón RESET después de cerrar el gráfico
 });
-
+*/
 
 
 
