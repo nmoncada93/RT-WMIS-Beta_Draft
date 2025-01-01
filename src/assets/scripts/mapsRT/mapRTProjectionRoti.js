@@ -1,16 +1,15 @@
 import { fetchIgpRotiData } from './mapRTController.js';
 import { coordinateAxes, drawAxisLabels, drawColorBar, paintGrid } from './mapRTVisualRoti.js';
 
-
 // [A] Configuración inicial ---------------------------------------------------
-const width = 1150; // Ancho del mapa
-const height = 600; // Alto del mapa
-const gridSize = 2; // Tamaño de las celdas de la cuadrícula en grados
+const width = 1150;
+const height = 600;
+const gridSize = 2; // Tamaño de las celdas de la cuadricula en grados
 
-// [A.1] Configuración de la proyección
+// [A.1] Configura la proyección
 const projection = d3.geoEquirectangular()
     .scale(150)
-    .translate([width / 2, (height / 2)]); // Centra la proyección
+    .translate([width / 2, (height / 2)]); // Centra la proyeccion
 
 // [A.2] Generador de rutas para GeoJSON
 const pathGenerator = d3.geoPath().projection(projection);
@@ -26,38 +25,38 @@ let intervalId;
 // [B] Inicializa mapa ------------------------------------------------
 async function initMap(fetchDataFunction) {
   try {
-      // [B.1] Carga datos del mundo en formato GeoJSON
+      // Carga datos del mundo en formato GeoJSON
       const worldData = await loadWorldData();
 
-      // [B.2] Dibuja países en el mapa
+      // Dibuja países en el mapa
       drawCountries(worldData);
 
-      // [B.2.2] Dibuja grilla (coordenadas X Y)
+      // Dibuja grilla (coordenadas X Y)
       coordinateAxes(projection, svg);
 
-      // [B.2.3] Agrega etiquetas de ejes
+      // Agrega etiquetas de ejes
       drawAxisLabels(svg, width, height);
 
-      // [B.2.4] Dibuja barra de colores
+      // Dibuja barra de colores
       drawColorBar(svg, width, height);
 
-      // [B.3] Genera la cuadrícula 2x2 grados
+      // Genera la cuadrícula 2x2 grados
       const gridData = generateGridData(projection, gridSize);
 
-      // [B.4] Obtiene datos dinámicos desde el backend
+      // Obtiene datos dinámicos desde el backend
       const dynamicData = await fetchDataFunction();
 
       if (!dynamicData) {
           console.error("No se pudieron cargar los datos...");
           return;
       }
-      // [B.5] Pinta la cuadrícula con datos dinámicos
+      // Pinta la cuadrícula con datos dinámicos
       paintGrid(gridData, dynamicData, svg, 'mean_roti');
 
-      // [B.6] Inicia actualización en tiempo real
+      // Inicia actualización en tiempo real
       startRealTimeUpdates(gridData, fetchDataFunction);
 
-      // [B.7] Hace visible el botón "Reset" al cargar el mapa
+      // Hace visible el botón "Reset" al cargar el mapa
       const resetButton = document.getElementById("closeRotiMapBtn");
       resetButton.style.display = "block";
   } catch (error) {
@@ -74,8 +73,7 @@ async function loadWorldData() {
   }
 }
 
-
-// [D] Dibuja países ---------------------------------------------------------
+// [D] Dibuja paises ---------------------------------------------------------
 function drawCountries(worldData) {
   svg.selectAll("path")
       .data(worldData.features)
@@ -85,7 +83,7 @@ function drawCountries(worldData) {
       .attr("stroke", "black"); // Bordes de los países
 }
 
-// [E] Genera datos de la cuadrícula -----------------------------------------
+// [E] Genera datos de la cuadricula -----------------------------------------
 function generateGridData(projection, gridSize) {
   const gridData = [];
   for (let lon = -180; lon < 180; lon += gridSize) {
@@ -108,7 +106,7 @@ function generateGridData(projection, gridSize) {
   return gridData;
 }
 
-// [Z] Actualización en tiempo real ------------------------------------------
+// [Z] Actualizacion en tiempo real ------------------------------------------
 function startRealTimeUpdates(gridData, fetchDataFunction) {
   intervalId = setInterval(async () => {
       try {
@@ -117,11 +115,11 @@ function startRealTimeUpdates(gridData, fetchDataFunction) {
               paintGrid(gridData, dynamicData, svg);
           }
       } catch (error) {
-          console.error("Error durante la actualización en tiempo real:", error);
+          console.error("Error durante el Real-Time", error);
       }
-  }, 10000); // Actualiza cada 10 segundos
+  }, 10000);
 
-  // [Z.1] Detiene actualizaciones cuando se cierra la página
+  // [Z.1] Detiene actualizaciones cuando se cierra la pagina
   window.addEventListener("beforeunload", () => {
       clearInterval(intervalId);
   });
@@ -131,16 +129,11 @@ function startRealTimeUpdates(gridData, fetchDataFunction) {
 function resetMap() {
   // [X.1] Detiene setInterval
   clearInterval(intervalId);
-  console.log("Actualizaciones detenidas.");
+  console.log("Actualizaciones en stop.");
 
   // [X.2] Limpia contenido del mapa
   svg.selectAll("*").remove();
   console.log("Mapa limpiado.");
-
-  // [X.3] Ocultar boton "Reset"
-  //const resetButton = document.getElementById("closeRotiMapBtn");
-  //resetButton.style.display = "none";
-  //console.log("Boton 'Reset' oculto.");
 
   // [X.4] Oculta el contenedor del mapa
   const mapContainer = document.getElementById("rotiMapContainer");
@@ -152,7 +145,7 @@ function resetMap() {
   }
 }
 
-// [Y] Inicia mapa al pulsar el botón ----------------------------------------
+// [Y] Inicia mapa al pulsar el boton ----------------------------------------
 document.getElementById("rotiMapBtn").addEventListener("click", async () => {
   const mapContainer = document.getElementById("rotiMapContainer");
   mapContainer.style.display = "block";

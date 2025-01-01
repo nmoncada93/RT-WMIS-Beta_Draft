@@ -6,11 +6,11 @@ let pastRecordsData = {
   sphi: null,  // Almacena el JSON de sphi.tmp
   roti: null   // Almacena el JSON de roti.tmp
 };
-let activeIndex = null;  // Índice activo (sphi, roti)
-let selectedStation = ""; // Estación seleccionada
-let activeChart = null;  // Referencia global al gráfico activo
+let activeIndex = null;
+let selectedStation = "";
+let activeChart = null;
 
-// [D] Función para obtener los datos de sphi.tmp desde el backend
+// [B] Obtiene datos de sphi.tmp =====================================
 async function fetchSphiData(year, doy) {
   const url = `http://127.0.0.1:5000/api/indexPR/read-sphi/${year}/${doy}`;
 
@@ -31,7 +31,7 @@ async function fetchSphiData(year, doy) {
   }
 }
 
-// [D1] Nueva función para obtener los datos de roti.tmp desde el backend
+// [C] Obtiene datos de roti.tmp =====================================
 async function fetchRotiData(year, doy) {
 
   const url = `http://127.0.0.1:5000/api/indexPR/read-roti/${year}/${doy}`;
@@ -56,20 +56,18 @@ async function fetchRotiData(year, doy) {
   }
 }
 
-// [C] Función para detectar la estación seleccionada
+// [D] Detecta estacion seleccionada =================================================
 function detectSelectedStation() {
   const stationSelector = document.getElementById("pastStationSelector");
   selectedStation = stationSelector.value;
   console.log("Estación seleccionada:", selectedStation);
 }
 
-// [E] Función para actualizar estaciones en el selector
+// [E] Actualiza estaciones en el selector ===========================================
 function updateStationSelector(data) {
   const stationSelector = document.getElementById("pastStationSelector");
-  const availableStations = data.map(item => item[1]);  // Extraer estaciones
-  //hideLoadingSpinner();
+  const availableStations = data.map(item => item[1]);  // Extrae estaciones
   handlerSpinner(false);
-
 
   Array.from(stationSelector.options).forEach(option => {
     const stationCode = option.value;
@@ -83,42 +81,39 @@ function updateStationSelector(data) {
   });
 }
 
-// [M] Función para marcar el botón activo y desactivar el resto
+// [F] Marca boton activo y desactiva el resto ========================================
 function setActiveButton(button) {
   const buttons = document.querySelectorAll(".primaryPRBtn");
   buttons.forEach(btn => btn.classList.remove("active-button"));
   button.classList.add("active-button");
 }
 
-// [H] Función para resetear el estado de UI al hacer focus en el calendario
+// [G] Resetear el estado de UI al hacer focus en el calendario
 function resetUI() {
   const stationSelector = document.getElementById("pastStationSelector");
   document.getElementById("indexPRContainer").style.display = 'none';
-
-  // Ocultar selector de estaciones
   stationSelector.style.display = 'none';
 
-  // Eliminar el gráfico activo si existe
+  // Elimina gráfico activo si existe
   if (activeChart) {
     activeChart.dispose();
     activeChart = null;
     console.log("Gráfico eliminado.");
   }
-  // Resetear el selector de estaciones
   stationSelector.value = "";
 
-  // Desactivar y ocultar todos los botones de índice
+  // Desactiva y oculta todos los botones
   const buttons = document.querySelectorAll(".primaryPRBtn");
   buttons.forEach(btn => {
     btn.classList.remove("active-button");
-    btn.style.display = 'none';  // Oculta los botones nuevamente
+    btn.style.display = 'none';
   });
 
   // Reinicia Indice activo
   activeIndex = null;
 }
 
-// [K] Función para mostrar botones de índice solo si hay estación seleccionada
+// [H] Muestra botones INDEX solo si hay estación seleccionada y datos cargados ============
 function showIndexButtons() {
   const buttons = document.querySelectorAll('.primaryPRBtn');
 
@@ -129,14 +124,14 @@ function showIndexButtons() {
   }
 }
 
-// [J] Mostrar/ocultar spinner de carga
+// [I] Mostrar/ocultar spinner de carga
 function handlerSpinner(show) {
   const spinner = document.getElementById('loadingMessagePRindex');
   spinner.style.display = show ? 'flex' : 'none';
   console.log(show ? "Spinner mostrado" : "Spinner oculto");
 }
 
-// [Z] Función para manejar errores de datos o solicitudes fallidas
+// [J] Función para manejar errores de datos o solicitudes fallidas
 function handleNoData(message = "No data available for the selected date.") {
   const noDataMessage = document.getElementById('noDataMessagePRindex');
   handlerSpinner(false);
@@ -150,11 +145,11 @@ function handleNoData(message = "No data available for the selected date.") {
 //==============================  LISTENERS =============================================
 //=======================================================================================
 
-// [B] Evento para capturar la fecha seleccionada
+// [B] Captura estacion renderizasi hay índice activo
 document.getElementById("dateInput").addEventListener("change", function () {
   const { year, doy } = getSelectedDate(this.value);
   console.log("Fecha seleccionada:", this.value, "Año:", year, "Día del año (DoY):", doy);
-  //showLoadingSpinner();
+
   handlerSpinner(true);
   resetChart();
   document.getElementById('noDataMessagePRindex').style.display = 'none';
@@ -164,7 +159,7 @@ document.getElementById("dateInput").addEventListener("change", function () {
 // [G] Reset UI cuando el calendario obtiene foco
 document.getElementById("dateInput").addEventListener("change", resetUI);
 
-// [I] Evento para capturar la estación y renderizar automáticamente si hay índice activo
+// [I] Captura estacion y renderiza si hay indice activo
 document.getElementById("pastStationSelector").addEventListener("change", function () {
   detectSelectedStation();
   showIndexButtons();
@@ -176,40 +171,36 @@ document.getElementById("pastStationSelector").addEventListener("change", functi
   }
 });
 
-// [L1] Renderizar SPHI
+// [L1] Renderiza SPHI
 document.getElementById("sphiIndexPRBtn").addEventListener("click", function () {
   if (pastRecordsData.sphi && selectedStation) {
     activeIndex = 'sphi';
-    // [1] Muestra el contenedor antes de renderizar
     document.getElementById("indexPRContainer").style.display = 'flex';
     renderChart(pastRecordsData.sphi, selectedStation, 'sphi');
-    //chartRendered = true;  // MARCAR COMO RENDERIZADO
     setActiveButton(this);
   } else {
     console.log("Selecciona una estación antes de generar el gráfico.");
   }
 });
 
-// [L2] Renderizar ROTI
+// [L2] Renderiza ROTI
 document.getElementById("rotiIndexPRBtn").addEventListener("click", function () {
   if (pastRecordsData.roti && selectedStation) {
     activeIndex = 'roti';
     document.getElementById("indexPRContainer").style.display = 'flex';
     renderChart(pastRecordsData.roti, selectedStation, 'roti');
-    //chartRendered = true;  // MARCAR COMO RENDERIZADO
     setActiveButton(this);
   } else {
     console.log("Selecciona una estación antes de generar el gráfico.");
   }
 });
 
-// [L3] Renderizar S4
+// [L3] Renderiza S4
 document.getElementById("s4IndexPRBtn").addEventListener("click", function () {
   if (pastRecordsData.roti && selectedStation) {
     activeIndex = 's4';
     document.getElementById("indexPRContainer").style.display = 'flex';
     renderChart(pastRecordsData.roti, selectedStation, 's4');
-    //chartRendered = true;  // MARCAR COMO RENDERIZADO
     setActiveButton(this);
   } else {
     console.log("Selecciona una estación antes de generar el gráfico.");

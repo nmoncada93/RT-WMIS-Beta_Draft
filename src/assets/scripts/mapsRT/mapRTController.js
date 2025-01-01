@@ -8,14 +8,13 @@ async function fetchRawSphiData() {
 
   isFetching.sphi = true; // Activa el flag
   try {
-    //const response = await fetch(`http://127.0.0.1:5000/api/mapsRT/read-igp-sphi?file=${file}`);
     const response = await fetch(`http://127.0.0.1:5000/api/mapsRT/read-igp-sphi`);
     if (!response.ok) {
       throw new Error(`Error HTTP para SPHI: ${response.status}`);
     }
-    return await response.json(); // [A.1.2] Retorna JSON obtenido
+    return await response.json();
   } finally {
-    isFetching.sphi = false; // Desactiva el flag
+    isFetching.sphi = false;
   }
 }
 
@@ -32,9 +31,9 @@ async function fetchRawRotiData() {
     if (!response.ok) {
       throw new Error(`Error HTTP para ROTI: ${response.status}`);
     }
-    return await response.json(); // [A.2.2] Retorna JSON obtenido
+    return await response.json();
   } finally {
-    isFetching.roti = false; // Desactiva el flag
+    isFetching.roti = false;
   }
 }
 
@@ -51,12 +50,11 @@ async function fetchRawS4Data() {
     if (!response.ok) {
       throw new Error(`Error HTTP para S4: ${response.status}`);
     }
-    return await response.json(); // [A.3.2] Retorna JSON obtenido
+    return await response.json();
   } finally {
-    isFetching.s4 = false; // Desactiva el flag
+    isFetching.s4 = false;
   }
 }
-
 
 // [B] Funcion para filtrar y estructurar los datos ---------------------------
 // [B.1] Filtro para SPHI
@@ -85,7 +83,6 @@ function filterSphiData(rawData) {
 
 // [B.2] Filtro para ROTI
 function filterRotiData(rawData) {
-  //console.log("Datos crudos para ROTI:", rawData); // Añade este console.log
   const latestTime = Math.max(...rawData.map(group => group.TIME));
   const latestGroup = rawData.find(group => group.TIME === latestTime);
 
@@ -135,13 +132,12 @@ function filterS4Data(rawData) {
 
 // [C] Funcion principal para obtener y procesar los datos --------------------
 // [C.1] Para SPHI
-//export async function fetchIgpSphiData(file = "igp_sphi.dat") {
   export async function fetchIgpSphiData() {
   try {
-    const rawData = await fetchRawSphiData(); // [C.1.1] Obtiene datos crudos
+    const rawData = await fetchRawSphiData();
     if (!rawData) return null;
 
-    return filterSphiData(rawData); // [C.1.2] Filtra datos para SPHI
+    return filterSphiData(rawData);
   } catch (error) {
     console.error("Error al obtener o procesar los datos SPHI:", error.message);
   }
@@ -150,14 +146,10 @@ function filterS4Data(rawData) {
 // [C.2] Para ROTI
 export async function fetchIgpRotiData() {
   try {
-    const rawData = await fetchRawRotiData(); // [C.2.1] Obtiene datos crudos
-
-    //console.log("Contenido detallado de los datos crudos para ROTI:", rawData); // Agrega este console.log aquí.
-
-
+    const rawData = await fetchRawRotiData();
     if (!rawData) return null;
 
-    return filterRotiData(rawData); // [C.2.2] Filtra datos para ROTI
+    return filterRotiData(rawData);
   } catch (error) {
     console.error("Error al obtener o procesar los datos ROTI:", error.message);
   }
@@ -166,15 +158,14 @@ export async function fetchIgpRotiData() {
 // [C.3] Para S4
 export async function fetchIgpS4Data() {
   try {
-    const rawData = await fetchRawS4Data(); // [C.3.1] Obtiene datos crudos
+    const rawData = await fetchRawS4Data();
     if (!rawData) return null;
 
-    return filterS4Data(rawData); // [C.3.2] Filtra datos para S4
+    return filterS4Data(rawData);
   } catch (error) {
     console.error("Error al obtener o procesar los datos S4:", error.message);
   }
 }
-
 
 // [GLOBAL] Flag para manejar solicitudes individuales
 const isFetching = {
@@ -182,7 +173,6 @@ const isFetching = {
   roti: false,
   s4: false,
 };
-
 
 
 // REAL TIME FUNCIONANDO....................................................................

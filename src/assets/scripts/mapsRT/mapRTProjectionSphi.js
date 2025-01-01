@@ -2,12 +2,11 @@ import { fetchIgpSphiData } from './mapRTController.js';
 import { coordinateAxes, drawAxisLabels, drawColorBar, paintGrid } from './mapRTVisualSphi.js';
 
 // [A] Configuracion inicial ---------------------------------------------------
-const width = 1150; // Ancho del mapa
-const height = 600; // Alto del mapa
+const width = 1150;
+const height = 600;
 const gridSize = 2; // Tamaño de las celdas de la cuadricula en grados
 
-// [A.1] Configuracion de la proyección
-//const projection = d3.geoMercator()
+// [A.1] Configuracion de la proyeccion
 const projection = d3.geoEquirectangular()
     .scale(150)
     .translate([width / 2, (height / 2)]); // Centra la proyeccion
@@ -17,12 +16,8 @@ const pathGenerator = d3.geoPath().projection(projection);
 
 // [A.3] Contenedor SVG
 const svg = d3.select("#sphiMapRender")
-    //.attr("viewBox", `0 0 ${width} ${height}`)
-    //.attr("preserveAspectRatio", "xMidYMid meet");
-    //.attr("viewBox", `-50 -50 ${width + 100} ${height + 100}`)
     .attr("viewBox", `-50 -5 ${width + 100} ${height + 100}`)
     .attr("preserveAspectRatio", "xMidYMid meet");
-
 
 // [A.4] Variable global para el ID del intervalo
 let intervalId;
@@ -30,25 +25,25 @@ let intervalId;
 // [B] Inicializa mapa ------------------------------------------------
 async function initMap(fetchDataFunction) {
   try {
-      // [B.1] Carga datos del mundo en formato GeoJSON
+      // Carga datos del mundo en formato GeoJSON
       const worldData = await loadWorldData();
 
-      // [B.2] Dibuja paises en el mapa
+      // Dibuja paises en el mapa
       drawCountries(worldData);
 
-      // [B.2.2] Dibuja graticula (coordenadas X Y)
+      // Dibuja graticula (coordenadas X Y)
       coordinateAxes(projection, svg);
 
-      // [B.2.3] Agrega etiquetas de ejes
+      // Agrega etiquetas de ejes
       drawAxisLabels(svg, width, height);
 
-      // [B.2.4] Dibuja barra de colores
+      // Dibuja barra de colores
       drawColorBar(svg, width, height);
 
-      // [B.3] Genera la cuadricula 2x2 grados
+      // Genera la cuadricula 2x2 grados
       const gridData = generateGridData(projection, gridSize);
 
-      // [B.4] Obtiene datos dinamicos desde el backend
+      // Obtiene datos dinamicos desde el backend
       const dynamicData = await fetchDataFunction();
 
       if (!dynamicData) {
@@ -56,20 +51,19 @@ async function initMap(fetchDataFunction) {
           return;
       }
 
-      // [B.5] Pinta la cuadricula con datos dinamicos
+      // Pinta la cuadricula con datos dinamicos
       paintGrid(gridData, dynamicData, svg);
 
-      // [B.6] Inicia actualizacion en tiempo real
+      // Inicia actualizacion en tiempo real
       startRealTimeUpdates(gridData, fetchDataFunction);
 
-      // [B.7] Hace visible el botón "Reset" al cargar el mapa
+      // Hace visible el botón "Reset" al cargar el mapa
       const resetButton = document.getElementById("closeSphiMapBtn");
       resetButton.style.display = "block";
   } catch (error) {
       console.error("Error al inicializar el mapa:", error);
   }
 }
-
 
 // [C] Carga datos del mapa --------------------------------------------------
 async function loadWorldData() {
@@ -87,7 +81,7 @@ function drawCountries(worldData) {
         .join("path")
         .attr("d", pathGenerator)
         .attr("fill", "#dcdcdc") // Color gris para los paises
-        .attr("stroke", "black"); // Bordes de los paises
+        .attr("stroke", "black"); // Bordes paises
 }
 
 // [E] Genera datos de la cuadricula -----------------------------------------
@@ -140,18 +134,11 @@ function resetMap() {
 
   // [X.2] Limpia contenido del mapa
   svg.selectAll("*").remove();
-  //console.log("Mapa limpio");
-
-  // [X.3] Ocultar boton "Reset"
-  //const resetButton = document.getElementById("closeSphiMapBtn");
-  //resetButton.style.display = "none";
-  //console.log("Boton 'Reset' oculto.");
 
   // [X.3] Oculta contenedor del mapa
   const mapContainer = document.getElementById("sphiMapContainer");
   if (mapContainer) {
     mapContainer.style.display = "none";
-    //console.log("Contenedor del mapa ocultado.");
   } else {
     console.error("No se encontro el contenedor del mapa...");
   }
@@ -161,7 +148,6 @@ function resetMap() {
 document.getElementById("sphiMapBtn").addEventListener("click", async () => {
     const mapContainer = document.getElementById("sphiMapContainer");
     mapContainer.style.display = "block";
-
     await initMap(fetchIgpSphiData);
 });
 

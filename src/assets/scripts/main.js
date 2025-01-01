@@ -3,8 +3,6 @@
 *              GENERAL WEBSITE: NAV (HOVER)              *
 *                                                        *
 ********************************************************/
-
-
 const navLinks = document.querySelectorAll(".headerNav__a");
 const currentPath = window.location.pathname;
 
@@ -26,13 +24,10 @@ navLinks.forEach((link) => {
   }
 });
 
-
-
 /**************************************************
  *
  * HEADER
  * ******************************************* */
-
 document.querySelector(".menuToggle").addEventListener("click", () => {
   const nav = document.querySelector(".headerNav");
   const overlay = document.querySelector(".menuOverlay");
@@ -69,12 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 /***************************************************
- * 
+ *
  * HEADER LANDING
  **************************************************/
-
 document.addEventListener("DOMContentLoaded", () => {
   const header = document.querySelector(".headerContainer");
   const headerLogo = document.querySelector(".logo");
@@ -87,9 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const COLORS = {
     background: "#000000",
     text: "#ffffff",
-    svgGradientStart: "rgba(255, 255, 255, 0)", // Transparente al inicio
-    svgGradientMiddle: "rgba(255, 255, 255, 0.7)", // Color claro en el centro
-    svgGradientEnd: "rgba(255, 255, 255, 0)" // Transparente al final
+    svgGradientStart: "rgba(255, 255, 255, 0)",
+    svgGradientMiddle: "rgba(255, 255, 255, 0.7)",
+    svgGradientEnd: "rgba(255, 255, 255, 0)"
   };
 
   const isHomePage = window.location.pathname.endsWith("index.html") || window.location.pathname === "/";

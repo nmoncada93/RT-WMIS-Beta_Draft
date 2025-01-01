@@ -1,10 +1,9 @@
-//import * as echarts from 'echarts/types/dist/echarts';
 import * as echarts from 'echarts';
 
-// [A] Variable global para almacenar el gráfico activo
+// [A] Variable global para almacenar el grafico activo
 let activeChart = null;
 
-// [B] Función para resetear el gráfico actual
+// [B] Resetea grafico actual
 export function resetChart() {
   if (activeChart) {
     activeChart.dispose();  // Elimina el gráfico de Echarts
@@ -13,7 +12,7 @@ export function resetChart() {
   }
 }
 
-// [C] Función auxiliar para seleccionar la columna correcta según el índice
+// [C] Para seleccionar la columna correcta segun indice
 function getIndexColumn(item, index) {
   switch (index) {
     case 'sphi': return item[5];  // SPHI L1 (columna 6)
@@ -25,7 +24,7 @@ function getIndexColumn(item, index) {
   }
 }
 
-// [C.1] Función para determinar la etiqueta del eje Y según el índice
+// [C.1] Determina etiqueta del eje Y segun el indice seleccionado
 function getYAxisLabel(index) {
   switch (index) {
     case 'sphi':
@@ -39,39 +38,39 @@ function getYAxisLabel(index) {
   }
 }
 
-// [D] Función para renderizar el gráfico según el índice seleccionado
+// [D] Renderiza grafico segun el indice seleccionado
 export function renderChart(data, station, index) {
   const chartDom = document.getElementById('pastChart');
 
-  // [D.1] Verifica si el contenedor del gráfico está visible y tiene dimensiones
+  // Verifica si el contenedor del grafico esta visible y tiene dimensiones
   if (chartDom.clientWidth === 0 || chartDom.clientHeight === 0) {
     console.warn("No es posible renderizar gráfico: el contenedor no tiene dimensiones.");
     return;
   }
 
-  // [D.2] Filtra los datos según la estación seleccionada
+  // Filtra los datos segun estación seleccionada
   const filteredData = data.filter(item => item[1] === station);
   if (filteredData.length === 0) {
     console.warn("No se encontraron datos para la estación seleccionada.");
     return;
   }
 
-  // [D.3] Resetear el gráfico existente antes de crear uno nuevo
+  // MANDATORY: Resetea grafico existente antes de crear uno nuevo
   resetChart();
 
-  // [D.4] Inicializa el gráfico Echarts
+  // Inicializa el gráfico Echarts
   const myChart = echarts.init(chartDom);
 
-  // [D.5] Guarda el gráfico activo en la variable global
+  // Guarda el grafico activo en la variable global
   activeChart = myChart;
 
-  // [D.6] Mapea los datos filtrados para obtener los valores correctos según el índice
+  // Mapea datos filtrados para obtener los valores correctos segun el indice
   const scatterData = filteredData.map(item => [item[0], getIndexColumn(item, index)]);
 
   // [D.7] Configuración del gráfico
   const option = {
     title: { text: `Index: ${index.toUpperCase()} for station: ${station}` },
-    tooltip: {  //Provide information when mouse cursor points to any point-data over the chart
+    tooltip: {  //Al pasar cursor por encima da información extra
       trigger: 'item',
       formatter: function (params) {
           return `Time: ${params.data[0]}<br>Value: ${params.data[1]}`;
@@ -80,7 +79,7 @@ export function renderChart(data, station, index) {
 
     grid: {
       top: '15%',
-      bottom: '20%'  // Añade espacio debajo del gráfico para el slider
+      bottom: '20%'  // Añade espacio debajo del grafico
     },
 
     xAxis: {
@@ -92,7 +91,7 @@ export function renderChart(data, station, index) {
       max: 90000,
       interval: 10000,
       axisLabel: {
-        hideOverlap: true // Oculta etiquetas que se montan unas con otras
+        hideOverlap: true // Oculta etiquetas superpuestas al reducir tamaño del chart
       }
     },
     yAxis: { type: 'value',  name: getYAxisLabel(index) /*name: `${index.toUpperCase()} (units)`*/ },
@@ -103,15 +102,14 @@ export function renderChart(data, station, index) {
       symbolSize: 4
     }],
 
-        // [1] Añadir zoom y paneo
+        // [1] Zoom
         dataZoom: [
           { type: 'slider', start: 0, end: 100},  // Zoom con barra deslizante
           { type: 'inside', start: 0, end: 100, zoomOnMouseWheel: true, moveOnMouseMove: true, moveOnTouch: true  }   // Zoom con scroll del ratón
       ],
-      // [2] Añadir botón de exportación
+      // [2] Botón de exportación
       toolbox: {
         show: true,
-        //iconSize: 40, // Ajusta el tamaño del icono
 
         feature: {
           saveAsImage: {
@@ -134,12 +132,11 @@ export function renderChart(data, station, index) {
       }
   };
   // [D.8] Renderiza el gráfico
-
   // Configura el gráfico con las opciones y fuerza el ajuste inicial
   myChart.setOption(option);
   myChart.resize(); // Fuerza el tamaño adecuado en la carga inicial
 
-  // Asegura que el gráfico se redimensione en el evento de cambio de tamaño
+  // Asegura que el grafico se redimensione en el evento de cambio de tamaño (RESPONSIVE)
   window.addEventListener('resize', () => {
     myChart.resize();
   });

@@ -9,7 +9,7 @@ export function getSelectedDate(dateString) {
   return { year, doy };
 }
 
-// [B] Función para descomprimir los archivos en el backend
+// [B] Descomprime .unxz
 export function decompressFiles(year, doy) {
   const decompressUrl = `http://127.0.0.1:5000/api/indexPR/unxz-files/${year}/${doy}`;
   console.log("Requesting for unzip:", decompressUrl);
@@ -25,15 +25,15 @@ export function decompressFiles(year, doy) {
     .then(decompressData => {
       console.log("Decompress Data:", decompressData);
       console.log("Decompress completed");
-      return decompressData; // Devuelve los datos de la descompresión
+      return decompressData; // Devuelve datos descomprimidos
     })
     .catch(error => {
       console.error("error unzipping:", error);
-      throw error; // Lanza el error para manejarlo en otro lugar
+      throw error;
     });
 }
 
-// [C] Función principal que coordina el proceso de descompresión y obtención de datos
+// [C] Coordina proceso de descompresion y obtencion de datos
 export function processIndexData(year, doy, fetchSphiData, fetchRotiData) {
   decompressFiles(year, doy)
     .then(() => {
